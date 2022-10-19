@@ -1,0 +1,16 @@
+.tile {
+  float: left;
+  display: block;
+  position: static;
+  animation-name: fadeIn;
+  animation-duration: 15s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

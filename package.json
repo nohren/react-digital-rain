@@ -1,0 +1,36 @@
+{
+  "name": "react-digital-rain",
+  "version": "1.0.0",
+  "description": "This is an implementation using gifs positioned statically in columns and rows and timed to start staggered.  i.e the current gif is triggered once the digital rain drop of the proceeding gif meets it.  This results in a rather seamless animation that adapts to the layout viewport, visual viewport and full screen.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c -o dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nohren/react-digital-rain.git"
+  },
+  "keywords": [],
+  "author": "nohren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nohren/react-digital-rain/issues"
+  },
+  "homepage": "https://github.com/nohren/react-digital-rain#readme",
+  "devDependencies": {
+    "@babel/preset-react": "^7.18.6",
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-image": "^3.0.0",
+    "babel-preset-react": "^6.24.1",
+    "react": "^18.2.0",
+    "rollup": "^2.79.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-styles": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "dependencies": {
+    "screenfull": "^6.0.2"
+  }
+}
