@@ -1,9 +1,21 @@
 .tile {
   float: left;
   display: block;
-  position: static;
   animation-name: fadeIn;
-  animation-duration: 15s;
+  animation-duration: 10s;
+}
+
+.outerFullScreen {
+  cursor: none;
+  overflow: hidden;
+  z-index: 20;
+  background-color: black;
+}
+
+.outerNotFullScreen {
+  overflow: hidden;
+  z-index: 1;
+  background-color: black;
 }
 
 @keyframes fadeIn {

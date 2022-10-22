@@ -1,55 +1,67 @@
+import "./styles.css";
 import React, { useEffect, useMemo, useState } from "react";
 import gif from "./digital_rain.gif";
 import screenfull from "screenfull";
-import "./styles.css";
+import useForceUpdate from "./useForceUpdate";
 
 const isNil = (value) =>
   value === undefined || value === null || Number.isNaN(value);
 
+/**
+ * A component that aims to fit its container, but really excels at fullscreen view...
+ *
+ * Can fit any size screen and keep its resolution.  Renders at about
+ * 150 pixels per second, downward.
+ *
+ * @param {{
+ *   height: number;
+ *   width: number
+ * }} props
+ * @returns JSX.Element
+ */
 export default function DigitalRain(props) {
   const height = isNil(props.height) ? "100%" : `${props.height}px`;
   const width = isNil(props.width) ? "100%" : `${props.width}px`;
 
+  const forceUpdate = useForceUpdate();
+
   const outerStylesFullScreen = {
-    cursor: "none",
-    overflow: "hidden",
     height: window.screen.height,
     width: window.screen.width,
-    zIndex: 20,
-    backgroundColor: "black",
   };
   const outerStylesNotFullScreen = {
-    cursor: "none",
-    overflow: "hidden",
     height: height, //inherit height from parent, not from child. Enforce height limitations.  For some reason width does this by default, but not height.
     width: width,
   };
 
+  //cache values in array pointers for event handler functions that only know the initial context.  No need for refs.
   const [state, setState] = useState({
-    ready: false,
-    blobCache: null,
+    ready: [false],
+    blobCache: [null],
     isFullScreen: false,
   });
 
-  useEffect(() => {
-    generateBlob(gif).then((res) =>
-      setState({
-        ...state,
-        ready: true,
-        blobCache: res,
-      })
-    );
-  }, [state.isFullScreen]);
+  const ready = state.ready[0];
+  const blobCache = state.blobCache[0];
+  const isFullScreen = state.isFullScreen;
 
-  useEffect(() => {
-    screenfull.on("change", () => {
-      if (screenfull.isFullscreen) {
-        setState({ ...state, isFullScreen: true });
-      } else {
-        setState({ ...state, isFullScreen: false });
+  const focusChange = (event) => {
+    try {
+      if (!event.target.hidden) {
+        forceUpdate();
       }
-    });
-  }, []);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const screenChange = () => {
+    if (screenfull.isFullscreen) {
+      setState({ ...state, isFullScreen: true });
+    } else {
+      setState({ ...state, isFullScreen: false });
+    }
+  };
 
   const generateBlob = async (url) => {
     try {
@@ -58,6 +70,24 @@ export default function DigitalRain(props) {
       console.error("Blob failed to load " + e);
     }
   };
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", focusChange);
+    screenfull.on("change", screenChange);
+
+    generateBlob(gif).then((res) => {
+      //update state pointers, then call reconciliation to draw new values to the screen.
+      state.ready[0] = true;
+      state.blobCache[0] = res;
+      forceUpdate();
+    });
+
+    return () => {
+      //avoids memory leaks
+      document.removeEventListener("visibilitychange", focusChange);
+      screenfull.off("change", screenChange);
+    };
+  }, []);
 
   const enterFullScreen = () => {
     window.scroll(0, 0);
@@ -81,7 +111,7 @@ export default function DigitalRain(props) {
     useEffect(() => {
       // For cleaning up the blob string on unmount.
       return () => {
-        if (blobUrlString !== undefined) {
+        if (!isNil(blobUrlString)) {
           URL.revokeObjectURL(blobUrlString);
         }
       };
@@ -90,7 +120,8 @@ export default function DigitalRain(props) {
     return show && <img src={blobUrlString} className="tile" />;
   };
 
-  const TileController = () => {
+  const TileController = (props) => {
+    const { blobCache } = props;
     const gifHeight = 400;
     const gifWidth = 500;
     const rows = Math.ceil(window.screen.height / gifHeight);
@@ -100,7 +131,7 @@ export default function DigitalRain(props) {
       const tileMap = [];
       for (let i = 0, tiles = rows * columns; i < tiles; i++) {
         const level = Math.floor(i / columns);
-        tileMap.push(<Tile key={i} ms={2450 * level} blob={state.blobCache} />);
+        tileMap.push(<Tile key={i} ms={2450 * level} blob={blobCache} />);
       }
       return tileMap;
     }, []);
@@ -114,9 +145,7 @@ export default function DigitalRain(props) {
         id="DigitalRain_innerContainer"
         style={{
           width: gifWidth * columns,
-          height: state.isFullScreen
-            ? window.screen.height
-            : window.innerHeight,
+          height: isFullScreen ? window.screen.height : window.innerHeight,
           overflowY: "hidden",
         }}
       >
@@ -128,12 +157,11 @@ export default function DigitalRain(props) {
   return (
     <div
       id={"DigitalRain_outerContainer"}
-      onClick={state.isFullScreen ? exitFullScreen : enterFullScreen}
-      style={
-        state.isFullScreen ? outerStylesFullScreen : outerStylesNotFullScreen
-      }
+      onClick={isFullScreen ? exitFullScreen : enterFullScreen}
+      className={isFullScreen ? "outerFullScreen" : "outerNotFullScreen"}
+      style={isFullScreen ? outerStylesFullScreen : outerStylesNotFullScreen}
     >
-      {state.ready && <TileController />}
+      {ready && <TileController blobCache={blobCache} />}
     </div>
   );
 }

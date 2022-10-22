@@ -14,7 +14,7 @@ const config = {
       screenfull: "screenfull",
     },
   },
-  external: ["react", "react-dom"],
+  external: ["react", "react-dom", "screenfull"],
   plugins: [
     babel({
       exclude: "node_modules/**",
