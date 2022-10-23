@@ -51,9 +51,9 @@ const Digital_Rain = (props) => {
 
   const ref = useRef(null);
 
-  const ready = state.ready;
-  const blob = state.blob;
-  const isFullScreen = state.isFullScreen;
+  const ready = state.ready,
+    blob = state.blob,
+    isFullScreen = state.isFullScreen;
 
   const focusChange = (event) => {
     try {
