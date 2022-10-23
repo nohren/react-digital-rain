@@ -1,5 +1,7 @@
 # react-digital-rain
 
+<img src="./src/digital_rain.gif">
+
 ```
 npm install react-digital-rain
 ```
@@ -16,7 +18,7 @@ You can click on the animation for fullscreen and click again to remove fullscre
 
 **Props:**
 
-Can pass explicit height or width in px. Otherwise it will render its size according to its parent container. If the parent container has a height or width of 0, then it will define its height / width to fill up the screen.
+Can pass explicit height or width in px. Otherwise it will render its size according to its parent container. If the parent container has a height or width of 0, then it will define its height / width to fill up the screen. This is usefull when its the only component being rendered and needs to define - bottom up - the size of the DOM containers.
 
 @param
 
@@ -44,6 +46,6 @@ export default App;
 
 **Edge cases:**
 
-If the components height or width becomes larger than the screens height or width, then the visual viewport cannot focus on all the tiles., gifs will pause and lose timing. This is a browser feature and not a bug. It's strongly recommended not to make this component larger than window.screen.height or window.screen.width.
+If the components height or width becomes larger than the screens height or width, then the visual viewport cannot focus on all the tiles., gifs will pause and lose timing. This is a browser feature and not a bug... something about being out of sight and taking up computing resources and stuff. It's strongly recommended not to make this component larger than window.screen.height or window.screen.width.
 
 When switching between tabs and scrolling it in and out of view, it will simply restart the animation.
