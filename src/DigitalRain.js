@@ -1,5 +1,5 @@
 import "./styles.css";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import gif from "./digital_rain.gif";
 import screenfull from "screenfull";
 import useForceUpdate from "./useForceUpdate";
@@ -34,7 +34,7 @@ const Digital_Rain = (props) => {
     : props.width;
 
   //const innerHeight = window.innerHeight;
-  const forceUpdate = useForceUpdate();
+  const forceRemount = useForceUpdate();
 
   const outerStylesFullScreen = {
     height: screenHeight,
@@ -54,6 +54,8 @@ const Digital_Rain = (props) => {
     isFullScreen: false,
   });
 
+  const ref = useRef(null);
+
   const ready = state.ready;
   const blob = state.blob;
   const isFullScreen = state.isFullScreen;
@@ -61,7 +63,7 @@ const Digital_Rain = (props) => {
   const focusChange = (event) => {
     try {
       if (!event.target.hidden) {
-        forceUpdate(); //actually causes a remount for the component defined inside this file.
+        forceRemount(); //actually causes a remount for the component defined inside this file.
       }
     } catch (e) {
       console.log(e);
@@ -70,8 +72,10 @@ const Digital_Rain = (props) => {
 
   const screenChange = () => {
     if (screenfull.isFullscreen) {
+      document.body.style.overflow = "hidden";
       setState((prevState) => ({ ...prevState, isFullScreen: true }));
     } else {
+      document.body.style.overflow = "visible";
       setState((prevState) => ({ ...prevState, isFullScreen: false }));
     }
   };
@@ -84,9 +88,19 @@ const Digital_Rain = (props) => {
     }
   };
 
+  const scrollInView = (event) => {
+    const isIntersecting = event[0]?.isIntersecting;
+    if (isIntersecting) {
+      forceRemount();
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("visibilitychange", focusChange);
     screenfull.on("change", screenChange);
+
+    const observer = new IntersectionObserver(scrollInView);
+    observer.observe(ref.current);
 
     generateBlob(gif).then((blob) => {
       setState({ ...state, blob, ready: true });
@@ -130,7 +144,9 @@ const Digital_Rain = (props) => {
   };
 
   const TileMap = (props) => {
-    const { blob, height, width } = props;
+    const { blob } = props;
+    const height = props.height < screenHeight ? screenHeight : props.height;
+    const width = props.width < screenWidth ? screenWidth : props.width;
     const gifHeight = 400;
     const gifWidth = 500;
     const rows = Math.ceil(height / gifHeight);
@@ -169,6 +185,7 @@ const Digital_Rain = (props) => {
   return (
     <div
       id="dr_outerContainer"
+      ref={ref}
       onClick={isFullScreen ? exitFullScreen : enterFullScreen}
       className={isFullScreen ? "outerFullScreen" : "outerNotFullScreen"}
       style={isFullScreen ? outerStylesFullScreen : outerStylesNotFullScreen}

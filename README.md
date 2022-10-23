@@ -1,2 +1,49 @@
 # react-digital-rain
-This is an implementation using gifs positioned statically in columns and rows and timed to start staggered.  i.e the current gif is triggered once the digital rain drop of the proceeding gif meets it.  This results in a rather seamless animation that adapts to the layout viewport, visual viewport and full screen.
+
+```
+npm install react-digital-rain
+```
+
+**Intro:**
+
+This implementation of digital rain uses a gif, converted to a blob. These blob "tiles" are instanced based on the parent container dimensions (w,h) or user provided dimensions.
+
+Animation:
+
+The tiles are positioned statically in columns and rows. Each row gets a 2450ms delay, leading to a seemless animation that fits on all screen sizes. This works because the animation travels downward at 150pixels/second.
+
+You can click on the animation for fullscreen and click again to remove fullscreen.
+
+**Props:**
+
+Can pass explicit height or width in px. Otherwise it will render its size according to its parent container. If the parent container has a height or width of 0, then it will define its height / width to fill up the screen.
+
+@param
+
+height?: number;
+
+width?: number
+
+@returns JSX.Element
+
+**Example:**
+
+```
+
+import { DigitalRain } from "react-digital-rain";
+
+const App = props => {
+
+  return <DigitalRain />
+
+  // or  <DigtalRain height={400} width={800}/>
+}
+
+export default App;
+```
+
+**Edge cases:**
+
+If the components height or width becomes larger than the screens height or width, then the visual viewport cannot focus on all the tiles., gifs will pause and lose timing. This is a browser feature and not a bug. It's strongly recommended not to make this component larger than window.screen.height or window.screen.width.
+
+When switching between tabs and scrolling it in and out of view, it will simply restart the animation.
