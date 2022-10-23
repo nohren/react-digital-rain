@@ -15,10 +15,22 @@ export const isNil = (value) =>
  * @param {{
  *   height: number;
  *   width: number
+ *   enableFullScreen: boolean //defaults to true
  * }} props
  * @returns JSX.Element
  */
+
+export const exitFullScreen = () => screenfull.exit();
+
+export const enterFullScreen = () => {
+  window.scroll(0, 0);
+  screenfull.request();
+};
+
 const Digital_Rain = (props) => {
+  const enableFS = isNil(props.enableFullScreen)
+    ? true
+    : props.enableFullScreen;
   const screenHeight = window.screen.height,
     screenWidth = window.screen.width,
     innerHeight = window.innerHeight;
@@ -106,13 +118,6 @@ const Digital_Rain = (props) => {
     };
   }, []);
 
-  const enterFullScreen = () => {
-    window.scroll(0, 0);
-    screenfull.request();
-  };
-
-  const exitFullScreen = () => screenfull.exit();
-
   const Tile = (props) => {
     const { ms, blob } = props;
     const [show, setShow] = useState(false);
@@ -177,7 +182,9 @@ const Digital_Rain = (props) => {
     <div
       id="dr_outerContainer"
       ref={ref}
-      onClick={isFullScreen ? exitFullScreen : enterFullScreen}
+      onClick={
+        enableFS ? (isFullScreen ? exitFullScreen : enterFullScreen) : null
+      }
       className={isFullScreen ? "outerFullScreen" : "outerNotFullScreen"}
       style={isFullScreen ? outerStylesFullScreen : outerStylesNotFullScreen}
     >
