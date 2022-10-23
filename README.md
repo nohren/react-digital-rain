@@ -10,7 +10,7 @@ npm install react-digital-rain
 
 This implementation of digital rain uses a gif, converted to a blob. These blob "tiles" are instanced based on the parent container dimensions (w,h) or user provided dimensions.
 
-Animation:
+**Animation:**
 
 The tiles are positioned statically in columns and rows. Each row gets a 2450ms delay, leading to a seemless animation that fits on all screen sizes. This works because the animation travels downward at 150pixels/second.
 
