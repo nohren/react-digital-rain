@@ -9,12 +9,8 @@ export const isNil = (value) =>
   value === undefined || value === null || Number.isNaN(value);
 
 /**
- * A component that aims to fit its container, but really excels at fullscreen view...
- *
  * Can fit any size screen and keep its resolution.  Renders at about
- * 150 pixels per second, downward.
- *
- * This is not great for scrolling.  The browser automatically turns off the gif when not actively viewing.
+ * 150 pixels per second downward.
  *
  * @param {{
  *   height: number;
@@ -33,13 +29,12 @@ const Digital_Rain = (props) => {
     ? props.size.width || screenWidth
     : props.width;
 
-  //const innerHeight = window.innerHeight;
   const forceRemount = useForceUpdate();
 
   const outerStylesFullScreen = {
     height: screenHeight,
     width: screenWidth,
-    maxHeight: screenHeight, //body needs to have this in case its larger
+    maxHeight: screenHeight,
     maxWidth: screenWidth,
     position: "absolute",
   };
@@ -55,7 +50,6 @@ const Digital_Rain = (props) => {
   });
 
   const ref = useRef(null);
-
   const ready = state.ready;
   const blob = state.blob;
   const isFullScreen = state.isFullScreen;
@@ -63,7 +57,7 @@ const Digital_Rain = (props) => {
   const focusChange = (event) => {
     try {
       if (!event.target.hidden) {
-        forceRemount(); //actually causes a remount for the component defined inside this file.
+        forceRemount();
       }
     } catch (e) {
       console.log(e);
@@ -168,7 +162,6 @@ const Digital_Rain = (props) => {
        * Gifs are fixed at 400x500. They are drawn horizontally in columns to be wider than given width. Must explicitly define the width of container to account for the remainder, otherwise columns will not draw correctly according to calculations and not time correctly resulting in a messed up stitching.
        *
        * Outer div is like a magnifying glass over this and can never be larger than these dimensions.
-       * Upon full screen mode dimensions snap to the screen dimensions.
        */
       <div
         id="dr_innerContainer"
