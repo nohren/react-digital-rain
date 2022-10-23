@@ -10,7 +10,7 @@ export const isNil = (value) =>
 
 /**
  * Can fit any size screen and keep its resolution.  Renders at about
- * 150 pixels per second downward.
+ * 150 pixels per second, downward.
  *
  * @param {{
  *   height: number;
@@ -19,9 +19,9 @@ export const isNil = (value) =>
  * @returns JSX.Element
  */
 const Digital_Rain = (props) => {
-  const screenHeight = window.screen.height;
-  const screenWidth = window.screen.width;
-  const innerHeight = window.innerHeight;
+  const screenHeight = window.screen.height,
+    screenWidth = window.screen.width,
+    innerHeight = window.innerHeight;
   const height = isNil(props.height)
     ? props.size.height || innerHeight
     : props.height;
@@ -34,7 +34,7 @@ const Digital_Rain = (props) => {
   const outerStylesFullScreen = {
     height: screenHeight,
     width: screenWidth,
-    maxHeight: screenHeight,
+    maxHeight: screenHeight, //body needs to have this in case its larger
     maxWidth: screenWidth,
     position: "absolute",
   };
@@ -50,6 +50,7 @@ const Digital_Rain = (props) => {
   });
 
   const ref = useRef(null);
+
   const ready = state.ready;
   const blob = state.blob;
   const isFullScreen = state.isFullScreen;
@@ -93,8 +94,7 @@ const Digital_Rain = (props) => {
     document.addEventListener("visibilitychange", focusChange);
     screenfull.on("change", screenChange);
 
-    const observer = new IntersectionObserver(scrollInView);
-    observer.observe(ref.current);
+    new IntersectionObserver(scrollInView).observe(ref.current);
 
     generateBlob(gif).then((blob) => {
       setState({ ...state, blob, ready: true });
@@ -138,11 +138,11 @@ const Digital_Rain = (props) => {
   };
 
   const TileMap = (props) => {
+    const gifHeight = 400,
+      gifWidth = 500;
     const { blob } = props;
     const height = props.height < screenHeight ? screenHeight : props.height;
     const width = props.width < screenWidth ? screenWidth : props.width;
-    const gifHeight = 400;
-    const gifWidth = 500;
     const rows = Math.ceil(height / gifHeight);
     const columns = Math.ceil(width / gifWidth);
 
@@ -157,8 +157,6 @@ const Digital_Rain = (props) => {
 
     return (
       /**
-       * Guaranteed to always deliver a map larger than the component height, width
-       *
        * Gifs are fixed at 400x500. They are drawn horizontally in columns to be wider than given width. Must explicitly define the width of container to account for the remainder, otherwise columns will not draw correctly according to calculations and not time correctly resulting in a messed up stitching.
        *
        * Outer div is like a magnifying glass over this and can never be larger than these dimensions.

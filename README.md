@@ -46,6 +46,6 @@ export default App;
 
 **Edge cases:**
 
-If the components height or width becomes larger than the screens height or width, then the visual viewport cannot focus on all the tiles., gifs will pause and lose timing. This is a browser feature and not a bug... something about being out of sight and taking up computing resources and stuff. It's strongly recommended not to make this component larger than window.screen.height or window.screen.width.
+If the components height or width becomes larger than the screens height or width, then the visual viewport cannot focus on all the tiles i.e tiles will pause and lose timing. This is a browser feature and not a bug... something about freeing up computing resources and stuff. It's strongly recommended not to make this component larger than window.screen.height or window.screen.width.
 
-When switching between tabs and scrolling it in and out of view, it will simply restart the animation.
+When switching between tabs and scrolling in and out of view, it will simply restart the animation.
