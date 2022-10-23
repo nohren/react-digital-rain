@@ -3,8 +3,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import gif from "./digital_rain.gif";
 import screenfull from "screenfull";
 import useForceUpdate from "./useForceUpdate";
+import { withSize } from "react-sizeme";
 
-const isNil = (value) =>
+export const isNil = (value) =>
   value === undefined || value === null || Number.isNaN(value);
 
 /**
@@ -13,42 +14,54 @@ const isNil = (value) =>
  * Can fit any size screen and keep its resolution.  Renders at about
  * 150 pixels per second, downward.
  *
+ * This is not great for scrolling.  The browser automatically turns off the gif when not actively viewing.
+ *
  * @param {{
  *   height: number;
  *   width: number
  * }} props
  * @returns JSX.Element
  */
-export default function DigitalRain(props) {
-  const height = isNil(props.height) ? "100%" : `${props.height}px`;
-  const width = isNil(props.width) ? "100%" : `${props.width}px`;
+const Digital_Rain = (props) => {
+  const screenHeight = window.screen.height;
+  const screenWidth = window.screen.width;
+  const innerHeight = window.innerHeight;
+  const height = isNil(props.height)
+    ? props.size.height || innerHeight
+    : props.height;
+  const width = isNil(props.width)
+    ? props.size.width || screenWidth
+    : props.width;
 
+  //const innerHeight = window.innerHeight;
   const forceUpdate = useForceUpdate();
 
   const outerStylesFullScreen = {
-    height: window.screen.height,
-    width: window.screen.width,
+    height: screenHeight,
+    width: screenWidth,
+    maxHeight: screenHeight, //body needs to have this in case its larger
+    maxWidth: screenWidth,
+    position: "absolute",
   };
   const outerStylesNotFullScreen = {
-    height: height, //inherit height from parent, not from child. Enforce height limitations.  For some reason width does this by default, but not height.
-    width: width,
+    height: `${height}px`,
+    width: `${width}px`,
   };
 
-  //cache values in array pointers for event handler functions that only know the initial context.  No need for refs.
   const [state, setState] = useState({
-    ready: [false],
-    blobCache: [null],
+    ready: false,
+    blob: null,
     isFullScreen: false,
   });
 
-  const ready = state.ready[0];
-  const blobCache = state.blobCache[0];
+  const ready = state.ready;
+  const blob = state.blob;
   const isFullScreen = state.isFullScreen;
 
   const focusChange = (event) => {
     try {
       if (!event.target.hidden) {
-        forceUpdate();
+        forceUpdate(); //actually causes a remount for the component defined inside this file.
       }
     } catch (e) {
       console.log(e);
@@ -57,9 +70,9 @@ export default function DigitalRain(props) {
 
   const screenChange = () => {
     if (screenfull.isFullscreen) {
-      setState({ ...state, isFullScreen: true });
+      setState((prevState) => ({ ...prevState, isFullScreen: true }));
     } else {
-      setState({ ...state, isFullScreen: false });
+      setState((prevState) => ({ ...prevState, isFullScreen: false }));
     }
   };
 
@@ -75,15 +88,11 @@ export default function DigitalRain(props) {
     document.addEventListener("visibilitychange", focusChange);
     screenfull.on("change", screenChange);
 
-    generateBlob(gif).then((res) => {
-      //update state pointers, then call reconciliation to draw new values to the screen.
-      state.ready[0] = true;
-      state.blobCache[0] = res;
-      forceUpdate();
+    generateBlob(gif).then((blob) => {
+      setState({ ...state, blob, ready: true });
     });
 
     return () => {
-      //avoids memory leaks
       document.removeEventListener("visibilitychange", focusChange);
       screenfull.off("change", screenChange);
     };
@@ -120,48 +129,53 @@ export default function DigitalRain(props) {
     return show && <img src={blobUrlString} className="tile" />;
   };
 
-  const TileController = (props) => {
-    const { blobCache } = props;
+  const TileMap = (props) => {
+    const { blob, height, width } = props;
     const gifHeight = 400;
     const gifWidth = 500;
-    const rows = Math.ceil(window.screen.height / gifHeight);
-    const columns = Math.ceil(window.screen.width / gifWidth);
+    const rows = Math.ceil(height / gifHeight);
+    const columns = Math.ceil(width / gifWidth);
 
-    const tileMap = useMemo(() => {
-      const tileMap = [];
-      for (let i = 0, tiles = rows * columns; i < tiles; i++) {
+    const generateMap = useMemo(() => {
+      const tiles = [];
+      for (let i = 0, t = rows * columns; i < t; i++) {
         const level = Math.floor(i / columns);
-        tileMap.push(<Tile key={i} ms={2450 * level} blob={blobCache} />);
+        tiles.push(<Tile key={i} ms={2450 * level} blob={blob} />);
       }
-      return tileMap;
-    }, []);
+      return tiles;
+    }, [height, width]);
 
     return (
       /**
-       * inner div.  As big as the entire screen for drawing the right amount of columns. Drawing is done in browser by width, in rows.
-       * Outer div is like a magnifying glass over this.
+       * Guaranteed to always deliver a map larger than the component height, width
+       *
+       * Gifs are fixed at 400x500. They are drawn horizontally in columns to be wider than given width. Must explicitly define the width of container to account for the remainder, otherwise columns will not draw correctly according to calculations and not time correctly resulting in a messed up stitching.
+       *
+       * Outer div is like a magnifying glass over this and can never be larger than these dimensions.
+       * Upon full screen mode dimensions snap to the screen dimensions.
        */
       <div
-        id="DigitalRain_innerContainer"
+        id="dr_innerContainer"
         style={{
           width: gifWidth * columns,
-          height: isFullScreen ? window.screen.height : window.innerHeight,
-          overflowY: "hidden",
+          height: gifHeight * rows,
         }}
       >
-        {tileMap}
+        {generateMap}
       </div>
     );
   };
 
   return (
     <div
-      id={"DigitalRain_outerContainer"}
+      id="dr_outerContainer"
       onClick={isFullScreen ? exitFullScreen : enterFullScreen}
       className={isFullScreen ? "outerFullScreen" : "outerNotFullScreen"}
       style={isFullScreen ? outerStylesFullScreen : outerStylesNotFullScreen}
     >
-      {ready && <TileController blobCache={blobCache} />}
+      {ready && <TileMap blob={blob} height={height} width={width} />}
     </div>
   );
-}
+};
+
+export const DigitalRain = withSize({ monitorHeight: true })(Digital_Rain);

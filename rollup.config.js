@@ -12,9 +12,10 @@ const config = {
     globals: {
       react: "React",
       screenfull: "screenfull",
+      "react-sizeme": "react-sizeme",
     },
   },
-  external: ["react", "react-dom", "screenfull"],
+  external: ["react", "react-dom", "screenfull", "react-sizeme"],
   plugins: [
     babel({
       exclude: "node_modules/**",
