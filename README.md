@@ -8,13 +8,15 @@ npm install react-digital-rain
 
 **Intro:**
 
-This implementation of digital rain uses a gif, converted to a blob. These blob "tiles" are instanced based on the parent container dimensions (w,h) or user provided dimensions.
+This gif is really beautiful. The problem is it's only 500x400 and when you try to scale it to become a background image using css you lose the resolution. A friend of mine had a thought, why not stitch it together to fit the screen width and height? And why not delay the animation sequentially so that it all looks like one moving image no matter the screen dimensions? That's what this project attempts to do and place in one react component for use.
 
-**Animation:**
+**Technical:**
 
-The tiles are positioned statically in columns and rows. Each row gets a 2450ms delay, leading to a seemless animation that fits on all screen sizes. This works because the animation travels downward at 150pixels/second.
+The tiles are positioned statically in columns and rows. Each row gets a 2450ms delay, achieving a seemless animation that fits on all screen sizes. This works because the animation travels downward at 150pixels/second.
 
 You can click on the animation for fullscreen and click again to remove fullscreen.
+
+The browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs and scrolling in and out of view, this component will simply restart the animation to regain timing.
 
 **Props:**
 
@@ -56,9 +58,3 @@ import { DigitalRain, enterFullScreen, exitFullScreen } from "react-digital-rain
 
 //implement own fullscreen logic.
 ```
-
-**Edge cases:**
-
-If the components height or width becomes larger than the screens height or width, then the visual viewport cannot focus on all the tiles i.e tiles will pause and lose timing. This is a browser feature and not a bug... something about freeing up computing resources and stuff. It's strongly recommended not to make this component larger than window.screen.height or window.screen.width.
-
-When switching between tabs and scrolling in and out of view, it will simply restart the animation.
