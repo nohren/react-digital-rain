@@ -6,6 +6,8 @@
 npm install react-digital-rain
 ```
 
+➡️ [npmjs](https://www.npmjs.com/package/react-digital-rain)
+
 **Intro**
 
 This component renders beautiful neon digital rain on a black background. 
