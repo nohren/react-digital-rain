@@ -28,7 +28,7 @@ const enterFullScreen = () => {
  * A simple component that fits the container given
  * Full screen mode on click: boolean
  */
-export default function DigitalRain({
+export function DigitalRain({
   fullScreen = false
 }) {
   //forces a render on tab change, so we don't lose timing
