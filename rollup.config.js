@@ -11,11 +11,10 @@ const config = {
     name: "DigitalRain",
     globals: {
       react: "React",
-      screenfull: "screenfull",
-      "react-sizeme": "react-sizeme",
+      screenfull: "screenfull"
     },
   },
-  external: ["react", "react-dom", "screenfull", "react-sizeme"],
+  external: ["react", "react-dom", "screenfull"],
   plugins: [
     babel({
       exclude: "node_modules/**",

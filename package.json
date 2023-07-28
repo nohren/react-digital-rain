@@ -1,7 +1,7 @@
 {
   "name": "react-digital-rain",
   "version": "1.0.8",
-  "description": "This implementation of digital rain uses gifs positioned statically in columns and rows and timed to start staggered leading to a seemless animation that fits on all screens.  i.e the current gif is triggered once the digital rain drop of the proceeding gif meets it.  This results in a rather seamless animation that adapts to the layout viewport, visual viewport and full screen.  Currently, scrolling gifs outside of view will pause them undoing the precise timing needed to stitch them together.  On browser tab switch they simply remount to restore timing.",
+  "description": "This component renders beautiful neon digital rain on a black background.  It fits its container and also can be enabled to go fullscreen on click.",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,7 +17,9 @@
     "rain",
     "digitalrain",
     "matrix",
-    "cyberpunk"
+    "cyberpunk",
+    "neon",
+    "react"
   ],
   "author": "nohren",
   "license": "ISC",
@@ -44,7 +46,6 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "react-sizeme": "^3.0.2",
     "screenfull": "^6.0.2"
   },
   "peerDependencies": {

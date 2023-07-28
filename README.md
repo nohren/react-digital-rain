@@ -7,32 +7,23 @@ npm install react-digital-rain
 ```
 
 **Intro:**
+This component renders beautiful neon digital rain on a black background.  It fits its container and also can be enabled to go fullscreen on click.
 
-This gif is really beautiful. The problem is it's only 500x400 and when you try to scale it to become a background image using css you lose the resolution. A friend of mine had a thought, why not stitch it together to fit the screen width and height? And why not delay the animation sequentially so that it all looks like one moving image no matter the screen dimensions? That's what this project attempts to do and place in one simple neat react component for use.
 
 **Technical:**
+This component solves a problem with gifs. The problem is that the gif only fits a certain dimension, lets say, 500x400 pixels and when you try to scale it to become a background image using css you lose resolution.  It becomes blurry. Why not think of gifs as tiles and stitch them together to create a picture that fits the screen width and height of any screen? We can time the animation to start sequentially.  That's what this component does.
 
-The gifs are positioned statically in columns and rows. Each row gets a 2450ms delay, achieving a seemless animation that fits on all screen sizes. This works because the animation travels downward at 150pixels/second.
+The gifs are positioned statically in columns and rows. Each row gets a 2450ms delay, which is the speed of the rain over 400 pixels.   The animation travels downward at roughly 166 pixels per second. This achieves a seemless transition from tile to tile that fits on all screen sizes.
 
-Efficiency: One 500x400 tile is served to the browser and cached as a binary large object file. Found out through trial and error that this gives us control on timing. If we simply use the \<img> tag with src, all instances are given the same timing by the browser, no matter when they are appended to the DOM. You can break this behavior by adding a random query string to the end of the \<img src> attribute but this breaks browser caching and forces a the browser to request the \<img> on each render. Hooray for Blobs.
+A word on caching and timing - A 500x400 tile is served to the browser with the \<img> tag. If we simply use the \<img> tag with src, all instances are given the same gif start time by the browser.  We cannot start sequentially, even if they are appended to the DOM at a later point in time. We can break this behavior by adding a random query string to the end of the \<img src> attribute.  The downside is that this breaks the native browser caching and forces the browser to request the \<img> on each render.  We now have timing but are left with computationally expensive operations. The solution is the blob (binary large object).  With the blob we have control over \<img> timing AND we have control over caching.  The blob is our manual override to cache this gif ourselves.
 
 Of note, the browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs and scrolling in and out of view, this component will simply restart the animation to regain timing.
 
 **Props:**
 
-height?: number;
+fullScreen?: boolean;
 
-- can pass explicitly. If not passed, it will be determined by the parent container. In the event that the parent container height is 0, then the component will occupy window.innerHeight.
-
-width?: number;
-
-- can pass explicitly. If not passed, it will be determined by the parent container. In the event that the parent container width is 0, then the component will occupy window.screen.width.
-
-enableFullScreen?: boolean;
-
-- toggles true/false the fullscreen click event on the component. Defaults to true. You can choose to import exitFullScreen and enterFullScreen to do your own stuff.
-
-@returns JSX.Element
+- allows fullscreen when clicked. Defaults to false.
 
 **Example:**
 
@@ -46,19 +37,13 @@ const App = props => {
 
 }
 
-export default App;
-```
+//for fullscreen on click pass the prop
 
-More control over this event.
-
-```
-import { DigitalRain, enterFullScreen, exitFullScreen } from "react-digital-rain";
-
-//implement your own fullscreen logic
 const App = props => {
 
-  <DigtalRain height={400} width={800} enableFullScreen={false}/>
+  return <DigitalRain fullScreen />
 
 }
+
 export default App;
 ```
