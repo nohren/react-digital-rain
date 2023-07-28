@@ -72,7 +72,10 @@ export function DigitalRain({
     screenfull.on("change", screenChange);
 
     generateBlob(gif).then((res) => {
-      setState({...state, ready: [true], blobCache: [res]})
+       //update state pointers, then call reconciliation to draw new values to the screen.
+       state.ready[0] = true;
+       state.blobCache[0] = res;
+       forceUpdate();
     });
 
     return () => {
