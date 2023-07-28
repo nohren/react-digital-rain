@@ -72,7 +72,13 @@ export function DigitalRain({
     screenfull.on("change", screenChange);
 
     generateBlob(gif).then((res) => {
-       //update state pointers, then call reconciliation to draw new values to the screen.
+      /**
+       * Want to attach the screenChange function once on component mount.
+       * screenChange is a closure function.  The state variable will be the value of state at app start...
+       * This is not ideal
+       * So we use reference types in state ... i.e ... array pointers, update those and call a force update
+       * This calls render
+      */
        state.ready[0] = true;
        state.blobCache[0] = res;
        forceUpdate();
