@@ -19,16 +19,13 @@ const generateBlob = async (url) => {
 
 const exitFullScreen = () => screenfull.exit();
 
-const enterFullScreen = () => {
-  window.scroll(0, 0);
-  screenfull.request();
-};
+
 
 /**
  * A simple component that fits the container given
  * Full screen mode on click: boolean
  */
-export function DigitalRain({
+export default function DigitalRain({
   fullScreen = false
 }) {
   //forces a render on tab change, so we don't lose timing
@@ -59,10 +56,21 @@ export function DigitalRain({
     }
   };
 
+  const enterFullScreen = () => {
+    setState({ ...state, isFullScreen: true });
+  };
+  
+  //is called before screenful api attempts to change
+  useEffect(() => {
+    if (isFullScreen && !screenfull.isFullscreen) {
+      window.scroll(0, 0);
+      screenfull.request();
+    }
+  }, [isFullScreen])
+  
+  //is called after screenful api state attempts to change
   const screenChange = () => {
-    if (screenfull.isFullscreen) {
-      setState({ ...state, isFullScreen: true });
-    } else {
+    if (!screenfull.isFullscreen) {
       setState({ ...state, isFullScreen: false });
     }
   };
@@ -70,7 +78,7 @@ export function DigitalRain({
   useEffect(() => {
     document.addEventListener("visibilitychange", focusChange);
     screenfull.on("change", screenChange);
-
+    
     generateBlob(gif).then((res) => {
       /**
        * Want to attach the screenChange function once on component mount.
@@ -79,9 +87,9 @@ export function DigitalRain({
        * So we use reference types in state ... i.e ... array pointers, update those and call a force update
        * This calls render
       */
-       state.ready[0] = true;
-       state.blobCache[0] = res;
-       forceUpdate();
+      state.ready[0] = true;
+      state.blobCache[0] = res;
+      forceUpdate();
     });
 
     return () => {
