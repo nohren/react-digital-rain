@@ -8,7 +8,9 @@ npm install react-digital-rain
 
 **Intro**
 
-This component renders beautiful neon digital rain on a black background.  It fits its container and also can be enabled to go fullscreen on click.
+This component renders beautiful neon digital rain on a black background. 
+It fits its container.
+It can be enabled to go fullscreen when clicked on.
 
 
 **Technical**
