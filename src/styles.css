@@ -1,5 +1,5 @@
 #inner {
-  animation: blurAnimation 15s ease;
+  animation: blurAnimation 9s ease-in;
 }
 
 .tile {
