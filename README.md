@@ -1,4 +1,4 @@
-# react-digital-rain 💊 🔴 🔵 ⚡
+# react-digital-rain 💊 🔴 🔵 ⚡ 🟢 🌧️
 
 <img src="./src/digital_rain.gif">
 

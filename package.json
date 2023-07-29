@@ -1,7 +1,7 @@
 {
   "name": "react-digital-rain",
-  "version": "2.2.2",
-  "description": "This component renders beautiful neon digital rain on a black background.  It fits its container and also can be enabled to go fullscreen on click.",
+  "version": "3.0.0",
+  "description": "This component renders beautiful neon digital rain on a black background.  It fits its container. OnClick toggling into and out of fullscreen can be enabled.",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

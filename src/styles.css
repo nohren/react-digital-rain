@@ -1,8 +1,12 @@
+#inner {
+  animation: blurAnimation 15s ease;
+}
+
 .tile {
   float: left;
   display: block;
   animation-name: fadeIn;
-  animation-duration: 10s;
+  animation-duration: 3s;
 }
 
 .outerFullScreen {
@@ -16,6 +20,15 @@
   overflow: hidden;
   z-index: 1;
   background-color: black;
+}
+
+@keyframes blurAnimation {
+  from {
+    filter: blur(50px);
+  }
+  to {
+    filter: blur(0px); /* The amount of blur you want to apply */
+  }
 }
 
 @keyframes fadeIn {
