@@ -1,20 +1,19 @@
 import babel from "rollup-plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import styles from "rollup-plugin-styles";
-import sourcemaps from "rollup-plugin-sourcemaps";
 import image from "@rollup/plugin-image";
 
 export default {
   input: "src/DigitalRain.js",
   output: {
+    file: "dist/index.js",
     format: "umd",
     name: "DigitalRain",
+    sourcemap: true,
     globals: {
       react: "React",
       screenfull: "screenfull"
     },
-    sourcemap: true,
-    file: "dist/index.js"
   },
   external: ["react", "react-dom", "screenfull"],
   plugins: [
@@ -25,8 +24,7 @@ export default {
     image({
       extensions: /\.(png|jpg|jpeg|gif|svg)$/,
     }),
-    sourcemaps(),
-    terser(),
     styles(),
+    terser()
   ],
 };

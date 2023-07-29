@@ -1,4 +1,4 @@
-//static imports
+//static module imports
 import "./styles.css";
 import React, { useEffect, useState, useRef } from "react";
 import gif from "./digital_rain.gif";
@@ -22,28 +22,30 @@ const generateBlob = async (url) => {
   }
 };
 
-//react escape hatch functions - DOM API functions
-
+//DOM API functions to escape react
+const timeouts = [];
 /**
- * Imperative function appends the tiles to the dom node and synchronizes them.
- * To be added to componentDidUpdate when blob is ready.
+ * Debounced function appends all tiles
  */
 const generateRain = (htmlElement, blob, rows, columns) => {
+  while (timeouts.length > 0) {
+    clearTimeout(timeouts.pop());
+  }
+
   for (let i = 0, tiles = rows * columns; i < tiles; i++) {
     const level = Math.floor(i / columns);
 
-    setTimeout(() => {
+    timeouts.push(setTimeout(() => {
       const img = document.createElement("img");
       img.setAttribute('class', "tile");
       img.src = URL.createObjectURL(blob);
       htmlElement.append(img);
-    }, 2450 * level)
+    }, 2450 * level));
   }
 }
 
 /**
  * Function removes all tiles.
- * To be added to componentDidUnmount
  */
 const destroyRain = (htmlElement) => {
   while (!isNil(htmlElement?.firstChild)) {
@@ -52,11 +54,10 @@ const destroyRain = (htmlElement) => {
   }  
 }
 
-//back to react now
+//back to react
 
 /**
- * declare conmponent outside of react lifecycle to avoid re-declaring to the compiler, new memory reference locations,
- * and unessesary unmount/mounts
+ * declare conmponent outside of react lifecycle to avoid re-declaring to the compiler, new memory reference locations, and unessesary unmount/mounts
  */
 const TileGenerator = (props) => {
   const { blobCache, windowScreenHeight, windowScreenWidth, isFullScreen, windowInnerHeight } = props;
@@ -114,6 +115,8 @@ const TileGenerator = (props) => {
 export function DigitalRain({
   fullScreen = false
 }) {
+  //DOM references
+  const outer = useRef(null);
   //state management
   const [mount, setMount] = useState(0);
   const [state, setState] = useState({
@@ -122,6 +125,7 @@ export function DigitalRain({
     isFullScreen: false,
   });
   const { ready, blobCache, isFullScreen } = state;
+  
 
   
   //event handler functions
@@ -137,6 +141,14 @@ export function DigitalRain({
     }
   };
 
+  const windowResize = (event) => {
+    setMount((mount) => mount + 1);
+  }
+
+  const elementResize = (event) => {
+    setMount((mount) => mount + 1);
+  }
+
   const enterFullScreen = () => {
     setState((state) => ({ ...state, isFullScreen: true }));
   };
@@ -146,11 +158,16 @@ export function DigitalRain({
       setState((state) => ({ ...state, isFullScreen: false }));
     }
   };
-  
+
   //effects
   useEffect(() => {
     document.addEventListener("visibilitychange", focusChange);
+    window.addEventListener("resize", windowResize);
     screenfull.on("change", screenChange);
+    const resizeObserver = new ResizeObserver(elementResize);
+    if (outer.current) {
+      resizeObserver.observe(outer.current);
+    }
     
     generateBlob(gif).then((res) => {
       setState((state) => ({ ...state, blobCache: res, ready: true}))
@@ -158,7 +175,9 @@ export function DigitalRain({
 
     return () => {
       document.removeEventListener("visibilitychange", focusChange);
+      window.removeEventListener("resize", windowResize);
       screenfull.off("change", screenChange);
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -168,6 +187,7 @@ export function DigitalRain({
       screenfull.request();
     }
   }, [isFullScreen])
+
 
   return (
     <div
@@ -181,6 +201,7 @@ export function DigitalRain({
         height: "100%",
         width: "100%",
       }}
+      ref={outer}
     >
       {ready && <TileGenerator 
                   blobCache={blobCache} 

@@ -17,17 +17,15 @@ It can be enabled to go fullscreen when clicked on.
 
 **Technical**
 
-This component solves a problem with gifs. The problem is that if you want to use a gif as a background image using css you lose resolution.  It becomes blurry. 
+This component uses one gif to fit any screen. Using background image css scales the resolution. It will be blurry.
 
-This is because the gif only fits a certain dimension, lets say, 500x400 pixels and will not scale well.
+Instead this component uses a single gif, appending it over and over to fill the screen and timing it so that the rain looks continous.
 
-Why not think of gifs as tiles and stitch them together to create a picture that fits the screen? We can time the animation to start sequentially.  That's what this component does.
-
-**Positioning:** Gifs are positioned statically in columns and rows. Each row gets a 2450ms delay, which is the speed of the rain over 400 pixels.   The animation travels downward at roughly 166 pixels per second. This achieves a seemless transition from tile to tile that fits on all screen sizes.
+**Positioning:** We use one outer div and one inner.  The inner is going to calculate the gifs for the entire screen.  The outer is the magnifying glass.  The browser doesn't use whatever isn't showing. We will handle that later.  Gifs are positioned statically in columns and rows. Each row gets a 2450ms delay, which is the speed of the rain over 400 pixels.   The animation travels downward at roughly 166 pixels per second. This achieves a seemless transition from tile to tile that fits on all screen sizes.
 
 **Caching:** A word on caching and timing - A 500x400 tile is served to the browser with the \<img> tag. If we simply use the \<img> tag with src, all instances are given the same gif start time by the browser.  We cannot start sequentially, even if they are appended to the DOM at a later point in time. We can break this behavior by adding a random query string to the end of the \<img src> attribute.  The downside is that this breaks the native browser caching and forces the browser to request the \<img> on each render.  We now have timing but are left with computationally expensive operations. The solution is the blob (binary large object).  With the blob we have control over \<img> timing AND we have control over caching.  The blob is our manual override to cache this gif ourselves.
 
-**Browser-isms:** the browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs and scrolling in and out of view, this component will simply restart the animation to regain timing.
+**Browser-isms:** the browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs, resizing the window or the components parent element, this component will simply restart the animation to regain timing.
 
 **Props:**
 
