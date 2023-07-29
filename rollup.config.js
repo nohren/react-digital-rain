@@ -3,6 +3,7 @@ import { terser } from "rollup-plugin-terser";
 import styles from "rollup-plugin-styles";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import image from "@rollup/plugin-image";
+import cleanup from 'rollup-plugin-cleanup';
 
 const config = {
   input: "src/DigitalRain.js",
@@ -26,6 +27,7 @@ const config = {
     sourcemaps(),
     terser(),
     styles(),
+    cleanup(),
   ],
 };
 export default config;

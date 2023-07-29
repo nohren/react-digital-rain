@@ -1,6 +1,6 @@
 {
   "name": "react-digital-rain",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "This component renders beautiful neon digital rain on a black background.  It fits its container. OnClick toggling into and out of fullscreen can be enabled.",
   "main": "dist/index.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
+    "rollup-plugin-cleanup": "^3.2.1",
     "screenfull": "^6.0.2"
   },
   "peerDependencies": {
