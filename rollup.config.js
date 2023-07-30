@@ -4,6 +4,7 @@ import styles from "rollup-plugin-styles";
 import image from "@rollup/plugin-image";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import gzipPlugin from 'rollup-plugin-gzip'
 
 export default {
   input: "src/DigitalRain.js",
@@ -42,6 +43,7 @@ export default {
     styles(),
     commonjs(),
     nodeResolve(),
-    terser()
+    terser(),
+    gzipPlugin(),
   ],
 };
