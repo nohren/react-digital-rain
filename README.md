@@ -18,7 +18,7 @@ It can be enabled to go fullscreen when clicked on.
 npm install react-digital-rain
 ```
 
-When bundled and served with gzip, this package comes in at 8.7mb, 8.6mb is the gif itself.
+When bundled and served with gzip, this package comes in at 8.7mb, 8.6 of which is the gif.
 
 
 <h1>Technical</h1>
