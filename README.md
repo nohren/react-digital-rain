@@ -3,7 +3,7 @@
 
 <img src="./src/digital_rain.gif">
 <br></br>
-<b>This package now supports ESM in version 4.1.0 in combination with UMD which it only supported in previous versions</b>
+<b>As of version 5.0.0, this package now supports Next.js with both CJS and ESM module systems. Please use version 4.2.0 if you need UMD.</b>
 <br></br>
 
 <h1>Intro</h1>

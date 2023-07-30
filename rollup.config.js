@@ -5,33 +5,25 @@ import image from "@rollup/plugin-image";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import gzipPlugin from 'rollup-plugin-gzip'
+import peerDepsExternal from 'rollup-plugin-peer-deps-external'
+
+//for future, maybe use plugin postcss instead of styles
+//seems to have much more use and therefore possibly support
 
 export default {
   input: "src/DigitalRain.js",
   output: [
     {
-      //UMD build
-      file: "dist/index.umd.js",
-      format: "umd",
-      name: "DigitalRain",
-      sourcemap: true,
-      globals: {
-        react: "React",
-        screenfull: "screenfull"
-      },
+      file: "dist/cjs/index.js",
+      format: "cjs",
+      sourcemap: true
     },
     {
-       //esm build
-       file: "dist/index.esm.js",
-       format: "es",
+       file: "dist/esm/index.js",
+       format: "esm",
        sourcemap: true,
-       globals: {
-         react: "React",
-         screenfull: "screenfull"
-       },
     }
   ],
-  external: ["react", "react-dom", "screenfull"],
   plugins: [
     babel({
       exclude: "node_modules/**",
@@ -40,6 +32,7 @@ export default {
     image({
       extensions: /\.(png|jpg|jpeg|gif|svg)$/,
     }),
+    peerDepsExternal(),
     styles(),
     commonjs(),
     nodeResolve(),
