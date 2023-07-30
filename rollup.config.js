@@ -2,19 +2,34 @@ import babel from "rollup-plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import styles from "rollup-plugin-styles";
 import image from "@rollup/plugin-image";
+import commonjs from "@rollup/plugin-commonjs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default {
   input: "src/DigitalRain.js",
-  output: {
-    file: "dist/index.js",
-    format: "umd",
-    name: "DigitalRain",
-    sourcemap: true,
-    globals: {
-      react: "React",
-      screenfull: "screenfull"
+  output: [
+    {
+      //UMD build
+      file: "dist/index.umd.js",
+      format: "umd",
+      name: "DigitalRain",
+      sourcemap: true,
+      globals: {
+        react: "React",
+        screenfull: "screenfull"
+      },
     },
-  },
+    {
+       //esm build
+       file: "dist/index.esm.js",
+       format: "es",
+       sourcemap: true,
+       globals: {
+         react: "React",
+         screenfull: "screenfull"
+       },
+    }
+  ],
   external: ["react", "react-dom", "screenfull"],
   plugins: [
     babel({
@@ -25,6 +40,8 @@ export default {
       extensions: /\.(png|jpg|jpeg|gif|svg)$/,
     }),
     styles(),
+    commonjs(),
+    nodeResolve(),
     terser()
   ],
 };

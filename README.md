@@ -1,21 +1,27 @@
-# react-digital-rain 💊 🔴 🔵 ⚡ 🟢 🌧️
-
-<img src="./src/digital_rain.gif">
-
-```
-npm install react-digital-rain
-```
-
+# react-digital-rain 💊 🔴 🔵 ⚡ 🟢 🌧️ 
 ➡️ [npmjs](https://www.npmjs.com/package/react-digital-rain)
 
-**Intro**
+<img src="./src/digital_rain.gif">
+<br></br>
+<b>This package now supports ESM in version 4.1.0 in combination with UMD which it only supported in previous versions</b>
+<br></br>
+
+<h1>Intro</h1>
 
 This component renders beautiful neon digital rain on a black background. 
 It fits its container.
 It can be enabled to go fullscreen when clicked on.
 
 
-**Technical**
+
+```
+npm install react-digital-rain
+```
+
+
+
+
+<h1>Technical</h1>
 
 This component uses one gif to fit any screen. Using background image css scales the resolution. It will be blurry.
 
@@ -27,13 +33,16 @@ Instead this component uses a single gif, appending it over and over to fill the
 
 **Browser-isms:** the browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs, resizing the window or the components parent element, this component will simply restart the animation to regain timing.
 
-**Props:**
+
+
+<h1>Usage</h1>
+
+<h3>Props</h3>
 
 ```
 fullScreen?: boolean // enters fullscreen when clicked. Defaults to false.
 ```
-
-**Example:**
+<h3>Example</h3>
 
 ```
 
