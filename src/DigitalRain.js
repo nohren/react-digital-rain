@@ -93,7 +93,7 @@ const TileGenerator = (props) => {
         width: GIF_WIDTH * columns,
         height: isFullScreen ? windowScreenHeight : windowInnerHeight,
         overflowY: "hidden",
-        animation: `blurAnimation ${rows * 2.7}s ease-in`
+        animation: `blurAnimation ${rows * 3}s ease-in`
       }}
       ref={ref}
     ></div>
