@@ -101,7 +101,7 @@ const TileGenerator = (props) => {
 };
 
 /**
-A simple component that fits the container given
+ A simple component that fits the container given
  
  ComponentDidMount: DigitalRain registers listeners and sets binary large object in state
 
@@ -141,7 +141,9 @@ export function DigitalRain({
       if (!event.target.hidden) {
         //for functions refernced on componentMount, avoid referencing a variable in the closure scope. Value types will become stale.
         //instead pass a function to refernce the variable in internal state.
-        setMount((mount) => mount + 1);
+        if (readyRef.current) {
+          setMount((mount) => mount + 1);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -149,11 +151,15 @@ export function DigitalRain({
   };
 
   const windowResize = (event) => {
-    setMount((mount) => mount + 1);
+    if (readyRef.current) {
+      setMount((mount) => mount + 1);
+    }
   }
 
   const elementResize = (event) => {
-    setMount((mount) => mount + 1);
+    if (readyRef.current) {
+      setMount((mount) => mount + 1);
+    }
   }
 
   const elementHidden = (event) => {
