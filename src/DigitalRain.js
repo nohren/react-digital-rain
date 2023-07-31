@@ -56,6 +56,18 @@ const destroyRain = (htmlElement) => {
 
 //back to react
 
+//hooks
+
+/**
+ * a hook to expose fullscreen functionality.  Will tell you when you are in or out of fullscreen.
+ */
+export const useFullScreen = () => ({
+  isFullScreen: screenfull.isFullscreen,
+  screenfullAPI: screenfull
+})
+
+//components
+
 /**
  * declare conmponent outside of react lifecycle to avoid re-declaring to the compiler, new memory reference locations, and unessesary unmount/mounts
  */
@@ -86,6 +98,7 @@ const TileGenerator = (props) => {
         width: GIF_WIDTH * columns,
         height: isFullScreen ? windowScreenHeight : windowInnerHeight,
         overflowY: "hidden",
+        animation: `blurAnimation ${rows * 2.5}s ease-in`
       }}
       ref={ref}
     ></div>
@@ -126,8 +139,6 @@ export function DigitalRain({
   });
   const { ready, blobCache, isFullScreen } = state;
   
-
-  
   //event handler functions
   const focusChange = (event) => {
     try {
@@ -149,6 +160,12 @@ export function DigitalRain({
     setMount((mount) => mount + 1);
   }
 
+  const elementHidden = (event) => {
+     if (event[0]?.isIntersecting === true) {
+       setMount((mount) => mount + 1);
+     }
+  }
+
   const enterFullScreen = () => {
     setState((state) => ({ ...state, isFullScreen: true }));
   };
@@ -165,8 +182,10 @@ export function DigitalRain({
     window.addEventListener("resize", windowResize);
     screenfull.on("change", screenChange);
     const resizeObserver = new ResizeObserver(elementResize);
+    const intersectionObserver = new IntersectionObserver(elementHidden);
     if (outer.current) {
       resizeObserver.observe(outer.current);
+      intersectionObserver.observe(outer.current);
     }
     
     generateBlob(gif).then((res) => {
@@ -178,6 +197,7 @@ export function DigitalRain({
       window.removeEventListener("resize", windowResize);
       screenfull.off("change", screenChange);
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
     };
   }, []);
 

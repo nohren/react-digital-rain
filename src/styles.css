@@ -1,7 +1,3 @@
-#inner {
-  animation: blurAnimation 15s ease-in;
-}
-
 .tile {
   float: left;
   display: block;
