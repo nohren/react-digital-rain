@@ -54,11 +54,31 @@ const App = props => {
 
 }
 
-//for fullscreen on click pass the prop
+//for fullscreen when clicked
 
 const App = props => {
 
   return <DigitalRain fullScreen />
+
+}
+
+export default App;
+```
+
+<h3>For more control of fullscreen</h3>
+
+```
+
+import { DigitalRain, useFullScreen } from "react-digital-rain";
+
+const App = props => {
+  
+  const { isFullScreen, screenfull } = useFullScreen();
+
+  return <>
+     !isFullScreen && <NavBar />
+     <DigitalRain fullScreen />
+     </>
 
 }
 
