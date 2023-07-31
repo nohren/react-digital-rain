@@ -2,7 +2,7 @@
   float: left;
   display: block;
   animation-name: fadeIn;
-  animation-duration: 5s;
+  animation-duration: 3s;
 }
 
 .outerFullScreen {
