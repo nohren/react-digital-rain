@@ -61,10 +61,28 @@ const destroyRain = (htmlElement) => {
 /**
  * a hook to expose fullscreen functionality and to tell you when you are in or out of fullscreen
  */
-export const useFullScreen = () => ({
-  isFullScreen: screenfull.isFullscreen,
-  screenfullAPI: screenfull
-})
+export const useFullScreen = () => {
+  const [isFullScreen, setFullScreen] = useState(false);
+  
+  const screenChange = () => {
+    if (screenfull.isFullscreen) {
+      setFullScreen(true);
+    } else {
+      setFullScreen(false);
+    }
+  };
+  useEffect(() => {
+    screenfull.on("change", screenChange);
+    return () => {
+      screenfull.off("change", screenChange);
+    }
+  }, [])
+  
+  return {
+    isFullScreen,
+    screenfull
+  }
+}
 
 //components
 
