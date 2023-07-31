@@ -59,7 +59,7 @@ const destroyRain = (htmlElement) => {
 //hooks
 
 /**
- * a hook to expose fullscreen functionality.  Will tell you when you are in or out of fullscreen.
+ * a hook to expose fullscreen functionality and to tell you when you are in or out of fullscreen
  */
 export const useFullScreen = () => ({
   isFullScreen: screenfull.isFullscreen,
@@ -68,9 +68,6 @@ export const useFullScreen = () => ({
 
 //components
 
-/**
- * declare conmponent outside of react lifecycle to avoid re-declaring to the compiler, new memory reference locations, and unessesary unmount/mounts
- */
 const TileGenerator = (props) => {
   const { blobCache, windowScreenHeight, windowScreenWidth, isFullScreen, windowInnerHeight } = props;
   const ref = useRef(null);
@@ -78,13 +75,11 @@ const TileGenerator = (props) => {
   const columns = Math.ceil(windowScreenWidth / GIF_WIDTH);
 
   useEffect(() => {
-    //on mount of this component, the blob is ready, generate the nodes via DOM API
     if (!isNil(ref.current)) { 
       generateRain(ref.current, blobCache, rows, columns);
     }
 
     return () => {
-      //on component unmount remove the nodes
       if (!isNil(ref.current)) {
         destroyRain(ref.current);
       }
@@ -106,30 +101,29 @@ const TileGenerator = (props) => {
 };
 
 /**
- * A simple component that fits the container given
- * 
- * ComponentDidMount: DigitalRain registers listeners and sets blob to state
- * 
- * ComponentDidUpdate: no way to avoid re-generating tiles on componentDidUpdate within react since that is what the 
- * component does. Escaped react to generate the tiles via DOM API.  This happens only on TileGenerator component mount.
- * TileGenerator unmount/remount triggered on focus change.
- * 
- * Notes about render:
- * outer div fits to screen to prevent scrolling and
- * inner div holds the tiles.  Inner div is always larger than the viewport.
- * 
- * If fullscreen is enabled, 
- * a click will change css height on the next render.  Following that render, we will request 
- * fullscreen from screenfull.  This avoids seeing a white empty space if the fullscreen request goes first.
- * 
- * While in fullscreen, a click or pressing the escape button will trigger the callback subscribed.  We verify we are no longer in fullscreen, and then change css on the next render.
- *
+A simple component that fits the container given
+ 
+ ComponentDidMount: DigitalRain registers listeners and sets binary large object in state
+
+ ComponentDidUpdate: no way to avoid re-generating tiles on componentDidUpdate in react.  Each render must produce JSX. And that JSX generates the synced gifs.  We only want to generate on mount.  Chose to escape react to generate the tiles via vanilla JS DOM API. 
+ 
+ TileGenerator unmount/remount triggered on focus change, on intersection with viewport (scrolled out of view), on tab change, on fullscreen enter and exit, and on element resize.
+ 
+ Render: outer div fits to screen to prevent scrolling and inner div holds the tiles.  Inner div is always larger than the viewport.
+ 
+ If fullscreen is enabled, 
+   a click will change css height on the next render.  Following that render, we will request 
+  fullscreen from screenfull.  This avoids seeing a white empty space if the fullscreen request goes first.
+ 
+  While in fullscreen, a click or pressing the escape button will trigger the callback subscribed.  We verify we are no longer in fullscreen, and then change css on the next render.
+ 
  */
 export function DigitalRain({
   fullScreen = false
 }) {
-  //DOM references
+  //refs
   const outer = useRef(null);
+  const readyRef = useRef(null)
   //state management
   const [mount, setMount] = useState(0);
   const [state, setState] = useState({
@@ -138,6 +132,8 @@ export function DigitalRain({
     isFullScreen: false,
   });
   const { ready, blobCache, isFullScreen } = state;
+
+  readyRef.current = ready;
   
   //event handler functions
   const focusChange = (event) => {
@@ -162,7 +158,9 @@ export function DigitalRain({
 
   const elementHidden = (event) => {
      if (event[0]?.isIntersecting === true) {
-       setMount((mount) => mount + 1);
+        if (readyRef.current) {
+           setMount((mount) => mount + 1);
+        }
      }
   }
 

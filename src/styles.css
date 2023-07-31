@@ -2,7 +2,7 @@
   float: left;
   display: block;
   animation-name: fadeIn;
-  animation-duration: 3s;
+  animation-duration: 5s;
 }
 
 .outerFullScreen {
@@ -20,7 +20,7 @@
 
 @keyframes blurAnimation {
   from {
-    filter: blur(50px);
+    filter: blur(60px);
   }
   to {
     filter: blur(0px); /* The amount of blur you want to apply */
