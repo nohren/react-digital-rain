@@ -87,7 +87,7 @@ export const useFullScreen = () => {
 //components
 
 const TileGenerator = (props) => {
-  const { blobCache, windowScreenHeight, windowScreenWidth, isFullScreen, windowInnerHeight } = props;
+  const { blobCache, windowScreenHeight, windowScreenWidth, isFullScreen, windowInnerHeight, animationSeconds } = props;
   const ref = useRef(null);
   const rows = Math.ceil(windowScreenHeight / GIF_HEIGHT);
   const columns = Math.ceil(windowScreenWidth / GIF_WIDTH);
@@ -111,7 +111,7 @@ const TileGenerator = (props) => {
         width: GIF_WIDTH * columns,
         height: isFullScreen ? windowScreenHeight : windowInnerHeight,
         overflowY: "hidden",
-        animation: `blurAnimation ${rows * 3}s ease-in`
+        animation: `blurAnimation ${animationSeconds ?? rows * 2.7}s ease-in`
       }}
       ref={ref}
     ></div>
@@ -137,7 +137,8 @@ const TileGenerator = (props) => {
  
  */
 export function DigitalRain({
-  fullScreen = false
+  fullScreen = false,
+  animationSeconds
 }) {
   //refs
   const outer = useRef(null);
@@ -252,6 +253,7 @@ export function DigitalRain({
                   isFullScreen={isFullScreen}
                   windowInnerHeight={window.innerHeight}
                   key={`${mount}`}
+                  animationSeconds={ typeof animationSeconds === "number" ? animationSeconds: null }
                 />}
     </div>
   );

@@ -41,8 +41,10 @@ Instead this component uses a single gif, appending it over and over to fill the
 
 ```
 fullScreen?: boolean // enters fullscreen when clicked. Defaults to false.
+
+animationSeconds?: number // the animation duration in seconds. If not provided, the animation duration will be calculated based on screen height
 ```
-<h3>Example</h3>
+<h3>Examples</h3>
 
 ```
 
@@ -54,11 +56,11 @@ const App = props => {
 
 }
 
-//for fullscreen when clicked
+//for fullscreen capability with minimal animation
 
 const App = props => {
 
-  return <DigitalRain fullScreen />
+  return <DigitalRain fullScreen animationSeconds={1}/>
 
 }
 
