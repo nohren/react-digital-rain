@@ -56,7 +56,7 @@ const App = props => {
 
 }
 
-//for fullscreen capability with light animation
+//for fullscreen capability with minimal animation
 
 const App = props => {
 
