@@ -1,6 +1,6 @@
 {
   "name": "react-digital-rain",
-  "version": "5.7.2",
+  "version": "5.7.3",
   "description": "This component renders beautiful neon digital rain on a black background.  It fits its container. OnClick toggling into and out of fullscreen can be enabled.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -40,7 +40,7 @@
     "react-dom": "^18.2.0",
     "rollup": "^2.79.1",
     "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-gzip": "^3.1.0",
+    "rollup-plugin-brotli": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-serve": "^2.0.1",
