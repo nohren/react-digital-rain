@@ -2,17 +2,30 @@
 import "./styles.css";
 import React, { useEffect, useState, useRef } from "react";
 import gif from "./digital_rain.gif";
-import screenfull from "screenfull";
+import screenfullAPI from "screenfull";
 
 //constants
 const GIF_HEIGHT = 400; //pixels
-const GIF_WIDTH = 500;  //pixels
+const GIF_WIDTH = 500; //pixels
 
 //util functions
 const isNil = (value) =>
   value === undefined || value === null || Number.isNaN(value);
 
 const noop = () => {};
+
+/**
+ * handles safari mobile
+ */
+const screenfull = screenfullAPI.isEnabled
+  ? screenfullAPI
+  : {
+      on: noop,
+      off: noop,
+      request: noop,
+      isFullScreen: false,
+      isEnabled: false,
+    };
 
 const generateBlob = async (url) => {
   try {
@@ -35,14 +48,16 @@ const generateRain = (htmlElement, blob, rows, columns) => {
   for (let i = 0, tiles = rows * columns; i < tiles; i++) {
     const level = Math.floor(i / columns);
 
-    timeouts.push(setTimeout(() => {
-      const img = document.createElement("img");
-      img.setAttribute('class', "tile");
-      img.src = URL.createObjectURL(blob);
-      htmlElement.append(img);
-    }, 2450 * level));
+    timeouts.push(
+      setTimeout(() => {
+        const img = document.createElement("img");
+        img.setAttribute("class", "tile");
+        img.src = URL.createObjectURL(blob);
+        htmlElement.append(img);
+      }, 2450 * level)
+    );
   }
-}
+};
 
 /**
  * Function removes all tiles.
@@ -51,8 +66,8 @@ const destroyRain = (htmlElement) => {
   while (!isNil(htmlElement?.firstChild)) {
     URL.revokeObjectURL(htmlElement.firstChild.src);
     htmlElement.removeChild(htmlElement.firstChild);
-  }  
-}
+  }
+};
 
 //back to react
 
@@ -63,7 +78,7 @@ const destroyRain = (htmlElement) => {
  */
 export const useFullScreen = () => {
   const [isFullScreen, setFullScreen] = useState(false);
-  
+
   const screenChange = () => {
     if (screenfull.isFullscreen) {
       setFullScreen(true);
@@ -75,25 +90,32 @@ export const useFullScreen = () => {
     screenfull.on("change", screenChange);
     return () => {
       screenfull.off("change", screenChange);
-    }
-  }, [])
-  
+    };
+  }, []);
+
   return {
     isFullScreen,
-    screenfull
-  }
-}
+    screenfull,
+  };
+};
 
 //components
 
 const TileGenerator = (props) => {
-  const { blobCache, windowScreenHeight, windowScreenWidth, isFullScreen, windowInnerHeight, animationSeconds } = props;
+  const {
+    blobCache,
+    windowScreenHeight,
+    windowScreenWidth,
+    isFullScreen,
+    windowInnerHeight,
+    animationSeconds,
+  } = props;
   const ref = useRef(null);
   const rows = Math.ceil(windowScreenHeight / GIF_HEIGHT);
   const columns = Math.ceil(windowScreenWidth / GIF_WIDTH);
 
   useEffect(() => {
-    if (!isNil(ref.current)) { 
+    if (!isNil(ref.current)) {
       generateRain(ref.current, blobCache, rows, columns);
     }
 
@@ -101,9 +123,9 @@ const TileGenerator = (props) => {
       if (!isNil(ref.current)) {
         destroyRain(ref.current);
       }
-    }
+    };
   }, []);
-  
+
   return (
     <div
       id="inner"
@@ -111,7 +133,7 @@ const TileGenerator = (props) => {
         width: GIF_WIDTH * columns,
         height: isFullScreen ? windowScreenHeight : windowInnerHeight,
         overflowY: "hidden",
-        animation: `blurAnimation ${animationSeconds ?? rows * 2.7}s ease-in`
+        animation: `blurAnimation ${animationSeconds ?? rows * 2.7}s ease-in`,
       }}
       ref={ref}
     ></div>
@@ -136,13 +158,10 @@ const TileGenerator = (props) => {
   While in fullscreen, a click or pressing the escape button will trigger the callback subscribed.  We verify we are no longer in fullscreen, and then change css on the next render.
  
  */
-export function DigitalRain({
-  fullScreen = false,
-  animationSeconds
-}) {
+export function DigitalRain({ fullScreen = false, animationSeconds }) {
   //refs
   const outer = useRef(null);
-  const readyRef = useRef(null)
+  const readyRef = useRef(null);
   //state management
   const [mount, setMount] = useState(0);
   const [state, setState] = useState({
@@ -153,7 +172,7 @@ export function DigitalRain({
   const { ready, blobCache, isFullScreen } = state;
 
   readyRef.current = ready;
-  
+
   //event handler functions
   const focusChange = (event) => {
     try {
@@ -173,21 +192,21 @@ export function DigitalRain({
     if (readyRef.current) {
       setMount((mount) => mount + 1);
     }
-  }
+  };
 
   const elementResize = (event) => {
     if (readyRef.current) {
       setMount((mount) => mount + 1);
     }
-  }
+  };
 
   const elementHidden = (event) => {
-     if (event[0]?.isIntersecting === true) {
-        if (readyRef.current) {
-           setMount((mount) => mount + 1);
-        }
-     }
-  }
+    if (event[0]?.isIntersecting === true) {
+      if (readyRef.current) {
+        setMount((mount) => mount + 1);
+      }
+    }
+  };
 
   const enterFullScreen = () => {
     setState((state) => ({ ...state, isFullScreen: true }));
@@ -210,9 +229,9 @@ export function DigitalRain({
       resizeObserver.observe(outer.current);
       intersectionObserver.observe(outer.current);
     }
-    
+
     generateBlob(gif).then((res) => {
-      setState((state) => ({ ...state, blobCache: res, ready: true}))
+      setState((state) => ({ ...state, blobCache: res, ready: true }));
     });
 
     return () => {
@@ -229,32 +248,45 @@ export function DigitalRain({
       window.scroll(0, 0);
       screenfull.request();
     }
-  }, [isFullScreen])
-
+  }, [isFullScreen]);
 
   return (
     <div
       id={"outer"}
-      onClick={fullScreen ? isFullScreen ? screenfull.exit : enterFullScreen: noop}
+      onClick={
+        fullScreen && screenfull.isEnabled
+          ? isFullScreen
+            ? screenfull.exit
+            : enterFullScreen
+          : noop
+      }
       className={isFullScreen ? "outerFullScreen" : "outerNotFullScreen"}
-      style={isFullScreen ? {
-        height: window.screen.height,
-        width: window.screen.width,
-      } : {
-        height: "100%",
-        width: "100%",
-      }}
+      style={
+        isFullScreen
+          ? {
+              height: window.screen.height,
+              width: window.screen.width,
+            }
+          : {
+              height: "100%",
+              width: "100%",
+            }
+      }
       ref={outer}
     >
-      {ready && <TileGenerator 
-                  blobCache={blobCache} 
-                  windowScreenHeight={window.screen.height} 
-                  windowScreenWidth={window.screen.width}
-                  isFullScreen={isFullScreen}
-                  windowInnerHeight={window.innerHeight}
-                  key={`${mount}`}
-                  animationSeconds={ typeof animationSeconds === "number" ? animationSeconds: null }
-                />}
+      {ready && (
+        <TileGenerator
+          blobCache={blobCache}
+          windowScreenHeight={window.screen.height}
+          windowScreenWidth={window.screen.width}
+          isFullScreen={isFullScreen}
+          windowInnerHeight={window.innerHeight}
+          key={`${mount}`}
+          animationSeconds={
+            typeof animationSeconds === "number" ? animationSeconds : null
+          }
+        />
+      )}
     </div>
   );
 }
