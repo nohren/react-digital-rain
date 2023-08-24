@@ -7,7 +7,7 @@
 
 <b>As of version 5.0.0, this package now supports Next.js with bundles for both CJS and ESM module systems. Please use version 4.2.0 if you need UMD.</b>
 
-<b>When bundled and served with brotli compression, the bundle comes in at 8.7mb, 8.6 of which is the gif. </b>
+<b>When bundled and served, the bundle comes in at 8.7mb, 8.6 of which is the gif. </b>
 <b>The gif is encoded to base64 and stored in the bundle for immediate use. No async loading. No webpack configurations required on the users end for file loading.</b>
 <br></br>
 
