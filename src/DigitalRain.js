@@ -1,6 +1,6 @@
 //static module imports
 import "./styles.css";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import gif from "./digital_rain.gif";
 import screenfullAPI from "screenfull";
 
@@ -119,7 +119,7 @@ const TileGenerator = (props) => {
    * Turns out that the refs on unmount are unreliable.  It's a race condition between the unmounting components DOM and the useEffect.
    * https://legacy.reactjs.org/blog/2020/08/10/react-v17-rc.html#effect-cleanup-timing
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const instance = ref.current;
     if (!isNil(instance)) {
       generateRain(instance, blobCache, rows, columns);
