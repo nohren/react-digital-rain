@@ -114,14 +114,20 @@ const TileGenerator = (props) => {
   const rows = Math.ceil(windowScreenHeight / GIF_HEIGHT);
   const columns = Math.ceil(windowScreenWidth / GIF_WIDTH);
 
+  /**
+   * Extremely important useEffect here.  This is our bridge to and from DOM JS to React lifecycle world.
+   * Turns out that the refs on unmount are unreliable.  It's a race condition between the unmounting components DOM and the useEffect.
+   * https://legacy.reactjs.org/blog/2020/08/10/react-v17-rc.html#effect-cleanup-timing
+   */
   useEffect(() => {
-    if (!isNil(ref.current)) {
-      generateRain(ref.current, blobCache, rows, columns);
+    const instance = ref.current;
+    if (!isNil(instance)) {
+      generateRain(instance, blobCache, rows, columns);
     }
 
     return () => {
-      if (!isNil(ref.current)) {
-        destroyRain(ref.current);
+      if (!isNil(instance)) {
+        destroyRain(instance);
       }
     };
   }, []);
