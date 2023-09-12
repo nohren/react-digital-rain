@@ -5,11 +5,9 @@
 <img src="./src/digital_rain.gif">
 <br></br>
 
-<b>As of version 5.0.0, this package now supports Next.js with bundles for both CJS and ESM module systems. Please use version 4.2.0 if you need UMD.</b>
+<b>Package version > 9.0.0 is experimental. This package no longer supports base64 encoding and instead packages the asset as a gif resource. This is to greatly decrease bundle size and loading time. You will need to make changes in your app bundler to use this. For next JS you can use webpack copy for gifs in node modules to your public/images folder or just copy/paste. To use base64 in the bundle, do not upgrade past 8.0.0.</b>
 
-<b>When bundled and served, the bundle comes in at 8.7mb, 8.6 of which is the gif. </b>
-<b>The gif is encoded to base64 and stored in the bundle for immediate use. No async loading. No webpack configurations required on the users end for file loading.</b>
-<br></br>
+<b>As of version 5.0.0, this package now supports Next.js with bundles for both CJS and ESM module systems. Please use version 4.2.0 if you need UMD.</b>
 
 <h1>Intro</h1>
 
