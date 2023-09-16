@@ -1,6 +1,6 @@
 {
   "name": "react-digital-rain",
-  "version": "9.2.2",
+  "version": "9.4.0",
   "description": "This component renders beautiful neon digital rain on a black background.  It fits its container. OnClick toggling into and out of fullscreen can be enabled.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -52,7 +52,7 @@
     "screenfull": "^6.0.2"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "16 - 18",
+    "react-dom": "16 - 18"
   }
 }

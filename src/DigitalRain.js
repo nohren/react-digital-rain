@@ -174,8 +174,10 @@ export function DigitalRain({ fullScreen = false, animationSeconds }) {
     ready: false,
     blobCache: null,
     isFullScreen: false,
+    width: 0,
+    height: 0,
   });
-  const { ready, blobCache, isFullScreen } = state;
+  const { ready, blobCache, isFullScreen, width, height } = state;
 
   readyRef.current = ready;
 
@@ -201,6 +203,11 @@ export function DigitalRain({ fullScreen = false, animationSeconds }) {
   };
 
   const elementResize = (event) => {
+    setState((state) => ({
+      ...state,
+      width: event[0].contentRect.width,
+      height: event[0].contentRect.height,
+    }));
     if (readyRef.current) {
       setMount((mount) => mount + 1);
     }
@@ -283,8 +290,8 @@ export function DigitalRain({ fullScreen = false, animationSeconds }) {
       {ready && (
         <TileGenerator
           blobCache={blobCache}
-          windowScreenHeight={window.screen.height}
-          windowScreenWidth={window.screen.width}
+          windowScreenHeight={height}
+          windowScreenWidth={width}
           isFullScreen={isFullScreen}
           windowInnerHeight={window.innerHeight}
           key={`${mount}`}
