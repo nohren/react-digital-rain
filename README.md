@@ -8,7 +8,7 @@
 <h2>Release History</h2>
 <ul>
 <li>
-   Version 10 package bundle includes the digital_rain.gif encoded as base64 again. This will automatically be bundled by the users application, no extra work required. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I highly recommend using code splitting techniques to not delay time to first load of your application. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>.
+   Version 10 package again encodes digital_rain.gif as base64. Expect 8mb to be bundled. No extra work required by your bundler. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I recommend using code splitting so that your application's first load is not delayed.  i.e Avoid sending this with the main bundle. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>
  </li>
  <li>
    Version 9 to 9.4.0 included the digital_rain.gif file as an asset due to the huge size of base64 on the bundle. This requires webpack copy plugin on the users end to utilize.  For next JS you can copy/paste the gif into your public/images folder or use webpack copy plugin.
@@ -42,7 +42,7 @@ This component uses one gif to fit any screen with no loss of resolution or stre
  background-attachment: fixed;
 ```
 
-This results in a blurry image as its stretched to fit most screens.
+This results in stretching for most screens and a blurry experience.
 
 **Solution:**
 
@@ -58,7 +58,7 @@ This component uses a single gif, appending it over and over to fill the screen 
 
 <h3>Props</h3>
 
-```
+```javascript
 fullScreen?: boolean // enters fullscreen when clicked. Defaults to false.
 
 animationSeconds?: number // the animation duration in seconds. If not provided, the animation duration will be calculated based on screen height
@@ -66,51 +66,74 @@ animationSeconds?: number // the animation duration in seconds. If not provided,
 
 <h3>Examples</h3>
 
-```
-//static import not recommended
+```javascript
+//static import discouraged (8mb will be included in main bundle)
 import DigitalRain from "react-digital-rain";
 
 //code splitting recommended
 
 const DigitalRain = React.lazy(() => import("react-digital-rain"));
 
-const App = props => {
-
+const App = (props) => {
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <DigitalRain />
     </React.Suspense>
-  )
-}
+  );
+};
 
-//for fullscreen capability with minimal animation
+//no animation and fullscreen
 
-const App = props => {
-
-  return <DigitalRain fullScreen animationSeconds={1}/>
-
-}
+const App = (props) => {
+  return <DigitalRain fullScreen animationSeconds={0} />;
+};
 
 export default App;
 ```
 
 <h3>For more control of fullscreen</h3>
-Hide the navbar when fullscreen.
+A hook is exposed to show/hide a navbar when fullscreen.
 
-```
+```javascript
+/**
+ * Use to dynamically load multiple functions from module
+ * This component does things one level higher in order to comply with React rule of Hooks
+ * It will only render the wrapped component when everything is loaded, inluding the hook
+ */
+const withLazy = (WrappedComponent, importModule, propsExtractor) => {
+  return (props) => {
+    const [loadedModule, setLoadedModule] = React.useState(null);
 
-import DigitalRain,{ useFullScreen } from "react-digital-rain";
+    React.useEffect(() => {
+      importModule().then((module) => setLoadedModule(propsExtractor(module)));
+    }, []);
 
-const App = props => {
+    return loadedModule ? (
+      <WrappedComponent {...loadedModule} {...props} />
+    ) : (
+      <div>...Loading</div>
+    );
+  };
+};
 
-  const { isFullScreen, screenfull } = useFullScreen();
+const App = withLazy(
+  (props) => {
+    const { DigitalRain, useFullScreen } = props;
+    const { isFullScreen, screenfull } = useFullScreen();
 
-  return <>
-     !isFullScreen && <NavBar />
-     <DigitalRain fullScreen />
-     </>
-
-}
+    return (
+      <>
+        {!isFullScreen && <NavBar />}
+        <DigitalRain fullScreen />
+      </>
+    );
+  },
+  () => import("react-digital-rain"),
+  (module) => ({
+    DigitalRain: module.DigitalRain, //module exports has named and default keys
+    useFullScreen: module.useFullScreen,
+  })
+);
 
 export default App;
 ```
