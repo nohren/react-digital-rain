@@ -1,11 +1,12 @@
 import babel from "rollup-plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import styles from "rollup-plugin-styles";
-//import image from "@rollup/plugin-image";
+import image from "@rollup/plugin-image";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import url from "@rollup/plugin-url";
+// import serve from "rollup-plugin-serve";
+//import url from "@rollup/plugin-url";
 
 //for future, maybe use plugin postcss instead of styles
 //seems to have much more use and therefore possibly support
@@ -42,5 +43,10 @@ export default {
     commonjs(),
     nodeResolve(),
     terser(),
+    // serve({
+    //   contentBase: "public",
+    //   host: "localhost",
+    //   port: 3000,
+    // }),
   ],
 };
