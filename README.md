@@ -8,13 +8,13 @@
 <h2>Release History</h2>
 <ul>
 <li>
-   Version 10 package again encodes digital_rain.gif as base64. Expect 8mb to be bundled. No extra work required by your bundler. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I recommend using code splitting so that your application's first load is not delayed.  i.e Avoid sending this with the main bundle. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>
+   Version 10 - this package again encodes digital_rain.gif as base64. Expect 8mb to be bundled. No extra work required by your bundler. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I recommend using code splitting so that your application's first load is not delayed.  i.e Avoid sending this with the main bundle. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>
  </li>
  <li>
-   Version 9 to 9.4.0 included the digital_rain.gif file as an asset due to the huge size of base64 on the bundle. This requires webpack copy plugin on the users end to utilize.  For next JS you can copy/paste the gif into your public/images folder or use webpack copy plugin.
+   Version 9 to 9.4.0 - the digital_rain.gif is included as a file asset in the node modules folder, due to the huge size of base64 on the bundle. This requires webpack copy plugin on the users end to utilize.  For next JS you can copy/paste the gif into your public/images folder or use webpack copy plugin.
  </li>
  <li>
- As of version 5.0.0, this package now supports Next.js with bundle for CJS. Please use version 4.2.0 and below if you need UMD.
+ As of version 5.0.0 - this package now supports Next.js with bundle for CJS. Please use version 4.2.0 and below if you need UMD.
  </li>
 
 </ul>
@@ -52,7 +52,7 @@ This component uses a single gif, appending it over and over to fill the screen 
 
 **Browser Eccentricities - Caching:** A word on caching and timing - A 500x400 gif "tile" is served to the browser with the \<img> tag. If we simply use the \<img> tag with src, all instances are given the same gif start time by the browser. We cannot start sequentially, even if they are appended to the DOM at a later point in time. We can break this behavior by adding a random query string to the end of the \<img src> attribute. The downside is that this breaks the native browser caching and forces the browser to request the \<img> on each render. We now have timing but are left with multiple expensive and slow operations. The solution is the blob (binary large object). With the blob we have control over \<img> timing AND we have control over caching. The blob is our manual override to cache this gif ourselves.
 
-**Browser Eccentricities gifs:** the browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs, resizing the window or resizing the parent element container, this component will simply restart the animation to regain synchronicity within the browser.
+**Browser Eccentricities - gifs:** the browser pauses gifs when they are out of view to conserve computing resources. When switching between tabs, resizing the window or resizing the parent element container, this component will simply restart the animation to regain synchronicity within the browser.
 
 <h1>Usage</h1>
 
@@ -92,13 +92,15 @@ export default App;
 ```
 
 <h3>For more control of fullscreen</h3>
-A hook is exposed to show/hide a navbar when fullscreen.
+A hook is exposed to show/hide a stuff, such as a navbar when fullscreen.
 
 ```javascript
 /**
- * Use to dynamically load multiple functions from module
- * This component does things one level higher in order to comply with React rule of Hooks
- * It will only render the wrapped component when everything is loaded, inluding the hook
+ * You will need to copy/paste this function into your code,
+ * or use something similar.
+ * Used to dynamically load multiple exports from module
+ * This is required to comply with React rule of Hooks
+ * It will only render the wrapped component when all is loaded
  */
 const withLazy = (WrappedComponent, importModule, propsExtractor) => {
   return (props) => {
@@ -130,7 +132,7 @@ const App = withLazy(
   },
   () => import("react-digital-rain"),
   (module) => ({
-    DigitalRain: module.DigitalRain, //module exports has named and default keys
+    DigitalRain: module.DigitalRain, //DigitalRain is both named and default
     useFullScreen: module.useFullScreen,
   })
 );
