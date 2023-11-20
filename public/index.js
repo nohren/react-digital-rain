@@ -16,7 +16,7 @@ import { createRoot } from "react-dom/client";
  * This component does things one level higher in order to comply with React hooks rule
  * It will only render the wrapped component when everything is loaded
  */
-const withLazy = (WrappedComponent, importModule, propsExtractor) => {
+const withLazy = (WrappedComponent, importModule, propsExtractor, fallback) => {
   return (props) => {
     const [loadedModule, setLoadedModule] = React.useState(null);
 
@@ -27,7 +27,7 @@ const withLazy = (WrappedComponent, importModule, propsExtractor) => {
     return loadedModule ? (
       <WrappedComponent {...loadedModule} {...props} />
     ) : (
-      <div>...Loading</div>
+      fallback
     );
   };
 };
@@ -48,7 +48,8 @@ const App = withLazy(
   (module) => ({
     DigitalRain: module.DigitalRain, //module exports as named and as default
     useFullScreen: module.useFullScreen,
-  })
+  }),
+  <div>...Loading</div>
 );
 
 // const App = () => {

@@ -103,7 +103,7 @@ A hook is exposed to show/hide a stuff, such as a navbar when fullscreen.
  * This is required to comply with React rule of Hooks
  * It will only render the wrapped component when all is loaded
  */
-const withLazy = (WrappedComponent, importModule, propsExtractor) => {
+const withLazy = (WrappedComponent, importModule, propsExtractor, fallback) => {
   return (props) => {
     const [loadedModule, setLoadedModule] = React.useState(null);
 
@@ -114,7 +114,7 @@ const withLazy = (WrappedComponent, importModule, propsExtractor) => {
     return loadedModule ? (
       <WrappedComponent {...loadedModule} {...props} />
     ) : (
-      <div>...Loading</div>
+      fallback
     );
   };
 };
@@ -135,7 +135,8 @@ const App = withLazy(
   (module) => ({
     DigitalRain: module.DigitalRain, //DigitalRain is both named and default, FYI
     useFullScreen: module.useFullScreen,
-  })
+  }),
+  <div>...Loading</div>
 );
 
 export default App;
