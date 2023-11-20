@@ -75,16 +75,11 @@ import DigitalRain from "react-digital-rain";
 const DigitalRain = React.lazy(() => import("react-digital-rain"));
 
 const App = props => {
-  const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    setShow(true)
-  }, [])
-
-  return show && (
-    <Suspense fallback={<div>Loading...</div>}>
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
       <DigitalRain />
-    </Suspense>
+    </React.Suspense>
   )
 }
 
