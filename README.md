@@ -35,11 +35,14 @@ This component uses one gif to fit any screen with no loss of resolution or stre
 
 **Problem:**
 
-```
- background-image: url("digital_rain.gif")
- background-size: cover;
- background-repeat: no-repeat;
- background-attachment: fixed;
+```css
+/* styles.css */
+body {
+  background-image: url("/images/digital_rain.gif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 ```
 
 This results in stretching for most screens and a blurry experience.
@@ -84,9 +87,7 @@ const App = (props) => {
 
 //no animation and fullscreen
 
-const App = (props) => {
-  return <DigitalRain fullScreen animationSeconds={0} />;
-};
+const App = (props) => <DigitalRain fullScreen animationSeconds={0} />;
 
 export default App;
 ```
