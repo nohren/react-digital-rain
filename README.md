@@ -98,17 +98,14 @@ export default App;
 
 ```javascript
 //For added control of full screen feature
-//useFullScreen hook is exposed to show/hide stuff,
-//such as hide a navbar when fullscreen.
+//I've exposed a hook called useFullScreen to know when to show/hide stuff,
+//such a hiding a navbar when fullscreen.
 
 /**
  * copy/paste or use similar
- * The following is required
- * to dynamically load the hook and component
- * for use within the react lifecycle
- * and satisfy the React rule of hooks
- * It will only render the wrapped component when
- * all dynamic loading is complete
+ * the following is a HOC to dynamically load everyting in one component
+ * this is to satisfy the React rule of hooks
+ * hook will be present on every render
  */
 const withLazy = (
   WrappedComponent,
@@ -131,17 +128,16 @@ const withLazy = (
   };
 };
 
-const App = withLazy(
+const LazyDigitalRain = withLazy(
   (props) => {
-    const { DigitalRain, useFullScreen } = props;
+    const { DigitalRain, useFullScreen, setShow, ...rest } = props;
     const { isFullScreen, screenfull } = useFullScreen();
 
-    return (
-      <>
-        {!isFullScreen && <NavBar />}
-        <DigitalRain fullScreen />
-      </>
-    );
+    React.useEffect(() => {
+      setShow(!isFullScreen);
+    }, [isFullScreen]);
+
+    return <DigitalRain {...rest} />;
   },
   () => import("react-digital-rain"),
   (module) => ({
@@ -150,6 +146,19 @@ const App = withLazy(
   }),
   <div>...Loading</div>
 );
+
+import NavBar from "@someNavBarPackage";
+
+const App = () => {
+  const [show, setShow] = React.UseState(true);
+
+  return (
+    <>
+      {show && <NavBar />}
+      <LazyDigitalRain fullScreen setShow={setShow} />
+    </>
+  );
+};
 
 export default App;
 ```
