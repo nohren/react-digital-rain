@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+//const BrotliPlugin = require("brotli-webpack-plugin");
 //const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
@@ -37,6 +38,12 @@ module.exports = {
       template: path.resolve(__dirname, "public/index.html"),
       filename: "index.html",
     }),
+    // new BrotliPlugin({
+    //   asset: "[path].br[query]",
+    //   test: /\.(js)$/,
+    //   threshold: 10240,
+    //   minRatio: 0.8,
+    // }),
     //new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
@@ -45,6 +52,14 @@ module.exports = {
     // },
     // historyApiFallback: true,
     // static: path.resolve(__dirname, "./dist"),
+    // onBeforeSetupMiddleware: function (devServer) {
+    //   devServer.app.get(/\.(js|css|html|svg)\.br$/, (req, res) => {
+    //     const originalPath = req.path.replace(/\.br$/, "");
+    //     res.set("Content-Encoding", "br");
+    //     res.set("Content-Type", "application/javascript"); // Adjust the content type based on your files
+    //     res.sendFile(originalPath, { root: __dirname });
+    //   });
+    // },
     compress: true,
     hot: true,
     open: true,

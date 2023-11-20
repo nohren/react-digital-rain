@@ -5,11 +5,9 @@ import image from "@rollup/plugin-image";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
+//import brotli from "rollup-plugin-brotli";
 // import serve from "rollup-plugin-serve";
 //import url from "@rollup/plugin-url";
-
-//for future, maybe use plugin postcss instead of styles
-//seems to have much more use and therefore possibly support
 
 export default {
   input: "src/DigitalRain.js",
@@ -29,7 +27,7 @@ export default {
     babel({
       exclude: "node_modules/**",
     }),
-    //image needs to be run first before anything else. What a bug.
+    //image needs to be run first before anything else.
     image({
       extensions: /\.(png|jpg|jpeg|gif|svg)$/,
     }),
@@ -43,10 +41,5 @@ export default {
     commonjs(),
     nodeResolve(),
     terser(),
-    // serve({
-    //   contentBase: "public",
-    //   host: "localhost",
-    //   port: 3000,
-    // }),
   ],
 };
