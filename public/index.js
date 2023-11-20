@@ -4,15 +4,18 @@ import { createRoot } from "react-dom/client";
 
 const DigitalRain = lazy(() => import("../dist/cjs/index"));
 
-console.log(import("../dist/cjs/index"));
+//console.log(import("../dist/cjs/index"));
 
 const App = () => {
   const [show, setShow] = useState(false);
   useEffect(() => {
-    setShow(true);
+    setTimeout(() => {
+      setShow(true);
+    }, 5000);
   }, []);
   return (
     <div>
+      {/* <DigitalRain /> */}
       {show && (
         <Suspense fallback="loading">
           <DigitalRain />
