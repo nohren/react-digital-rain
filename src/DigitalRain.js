@@ -1,22 +1,16 @@
-//static module imports
 import "./styles.css";
 import React, { useEffect, useState, useRef } from "react";
 import gif from "./digital_rain.gif";
 import screenfullAPI from "screenfull";
 
-//constants
-const GIF_HEIGHT = 400; //pixels
-const GIF_WIDTH = 500; //pixels
+const GIF_HEIGHT = 400; //css pixels
+const GIF_WIDTH = 500; //css pixels
 
-//util functions
 const isNil = (value) =>
   value === undefined || value === null || Number.isNaN(value);
 
 const noop = () => {};
 
-/**
- * handles safari mobile
- */
 const screenfull = screenfullAPI.isEnabled
   ? screenfullAPI
   : {
@@ -25,8 +19,11 @@ const screenfull = screenfullAPI.isEnabled
       request: noop,
       isFullScreen: false,
       isEnabled: false,
-    };
+    }; //adjust screenfull to handle safari mobile
 
+/**
+ * fetch gif data, convert to binary large object
+ */
 const generateBlob = async (url) => {
   try {
     return await (await fetch(url)).blob();
@@ -35,10 +32,12 @@ const generateBlob = async (url) => {
   }
 };
 
-//DOM API functions to escape react
+//Escaping react, vanilla JS DOM manipulation
 const timeouts = [];
 /**
- * Debounced function appends all tiles
+ * generate tiles
+ * may start to generate rain while some rain is still pending in the event loop
+ * added debouncing
  */
 const generateRain = (htmlElement, blob, rows, columns) => {
   while (timeouts.length > 0) {
@@ -69,10 +68,6 @@ const destroyRain = (htmlElement) => {
   }
 };
 
-//back to react
-
-//hooks
-
 /**
  * a hook to expose fullscreen functionality and to tell you when you are in or out of fullscreen
  */
@@ -99,8 +94,6 @@ export const useFullScreen = () => {
   };
 };
 
-//components
-
 const TileGenerator = (props) => {
   const {
     blobCache,
@@ -115,8 +108,13 @@ const TileGenerator = (props) => {
   const columns = Math.ceil(windowScreenWidth / GIF_WIDTH);
 
   /**
-   * Extremely important useEffect here.  This is our bridge to and from DOM JS to React lifecycle world.
-   * Turns out that the refs on unmount are unreliable.  It's a race condition between the unmounting components DOM and the useEffect.
+   * This useEffect is our bridge between React lifecycle world and manual DOM manipulation.
+   * Turns out that refs on unmount are unreliable.
+   * It's a race condition between the DOM unmounting the component and the useEffect function running.
+   *
+   * cache value of ref within the function scope.
+   * const instance = ref.current
+   *
    * https://legacy.reactjs.org/blog/2020/08/10/react-v17-rc.html#effect-cleanup-timing
    */
   useEffect(() => {
@@ -165,10 +163,8 @@ const TileGenerator = (props) => {
  
  */
 export const DigitalRain = ({ fullScreen = false, animationSeconds }) => {
-  //refs
   const outer = useRef(null);
   const readyRef = useRef(null);
-  //state management
   const [mount, setMount] = useState(0);
   const [state, setState] = useState({
     ready: false,
@@ -178,15 +174,14 @@ export const DigitalRain = ({ fullScreen = false, animationSeconds }) => {
     height: 0,
   });
   const { ready, blobCache, isFullScreen, width, height } = state;
-
   readyRef.current = ready;
 
-  //event handler functions
   const focusChange = (event) => {
     try {
       if (!event.target.hidden) {
-        //for functions refernced on componentMount, avoid referencing a variable in the closure scope. Value types will become stale.
-        //instead pass a function to refernce the variable in internal state.
+        //for functions referenced on componentMount,
+        //value type state variables will become stale in closure scope.
+        //pass a function to reference the variable in internal state.
         if (readyRef.current) {
           setMount((mount) => mount + 1);
         }
@@ -231,7 +226,6 @@ export const DigitalRain = ({ fullScreen = false, animationSeconds }) => {
     }
   };
 
-  //effects
   useEffect(() => {
     document.addEventListener("visibilitychange", focusChange);
     window.addEventListener("resize", windowResize);

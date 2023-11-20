@@ -69,11 +69,19 @@ animationSeconds?: number // the animation duration in seconds. If not provided,
 
 <h3>Examples</h3>
 
+```jsx
+<DigitalRain />
+
+//no animation and fullscreen
+
+<DigitalRain fullScreen animationSeconds={0} />
+```
+
 ```javascript
-//static import discouraged (8mb will be included in the main bundle)
+//static import is discouraged (8mb will be included in the main bundle)
 import DigitalRain from "react-digital-rain";
 
-//code splitting recommended
+//code splitting is encouraged
 
 const DigitalRain = React.lazy(() => import("react-digital-rain"));
 
@@ -85,23 +93,22 @@ const App = (props) => {
   );
 };
 
-//no animation and fullscreen
-
-<DigitalRain fullScreen animationSeconds={0} />;
-
 export default App;
 ```
 
-<h3>For more control of fullscreen</h3>
-A hook is exposed to show/hide a stuff, such as a navbar when fullscreen.
-
 ```javascript
+//For added control of full screen feature
+//useFullScreen hook is exposed to show/hide stuff,
+//such as hide a navbar when fullscreen.
+
 /**
- * You will need to copy/paste this function into your code,
- * or use something similar.
- * Used to dynamically load multiple exports from module
- * This is required to comply with React rule of Hooks
- * It will only render the wrapped component when all is loaded
+ * copy/paste or use similar
+ * The following is required
+ * to dynamically load the hook and component
+ * for use within the react lifecycle
+ * and satisfy the React rule of hooks
+ * It will only render the wrapped component when
+ * all dynamic loading is complete
  */
 const withLazy = (
   WrappedComponent,
