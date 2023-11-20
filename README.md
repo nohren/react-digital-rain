@@ -67,7 +67,7 @@ animationSeconds?: number // the animation duration in seconds. If not provided,
 <h3>Examples</h3>
 
 ```javascript
-//static import discouraged (8mb will be included in main bundle)
+//static import discouraged (8mb will be included in the main bundle)
 import DigitalRain from "react-digital-rain";
 
 //code splitting recommended
@@ -132,7 +132,7 @@ const App = withLazy(
   },
   () => import("react-digital-rain"),
   (module) => ({
-    DigitalRain: module.DigitalRain, //DigitalRain is both named and default
+    DigitalRain: module.DigitalRain, //DigitalRain is both named and default, FYI
     useFullScreen: module.useFullScreen,
   })
 );
