@@ -46,7 +46,7 @@ This results in a blurry image as its stretched to fit most screens.
 
 **Solution:**
 
-This component uses a single gif, appending it over and over to fill the screen and timing it so that the rain looks continuous.
+This component uses a single gif, appending it over and over to fill the screen and timing it so that the rain looks continuous. This is possible with rain.
 
 **Positioning:** We use one outer div and one inner. The inner is going to calculate the gifs for a little larger than the height/width of the container. The outer is the dimensions of the container. Turns out the browser has eccentricities when it comes to gifs. We will talk about that later. Gifs are positioned statically in columns and rows. Each row gets a 2450ms delay, which is the speed of the rain over 400 css pixels. The animation travels downward at roughly 166 css pixels per second. This achieves a seemless transition from tile to tile that fits on all screen sizes.
 
