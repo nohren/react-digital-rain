@@ -87,7 +87,7 @@ const App = (props) => {
 
 //no animation and fullscreen
 
-const App = (props) => <DigitalRain fullScreen animationSeconds={0} />;
+<DigitalRain fullScreen animationSeconds={0} />;
 
 export default App;
 ```
@@ -103,7 +103,12 @@ A hook is exposed to show/hide a stuff, such as a navbar when fullscreen.
  * This is required to comply with React rule of Hooks
  * It will only render the wrapped component when all is loaded
  */
-const withLazy = (WrappedComponent, importModule, propsExtractor, fallback) => {
+const withLazy = (
+  WrappedComponent,
+  importModule,
+  propsExtractor,
+  fallback = null
+) => {
   return (props) => {
     const [loadedModule, setLoadedModule] = React.useState(null);
 
