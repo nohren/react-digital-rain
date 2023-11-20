@@ -5,15 +5,25 @@
 <img src="./src/digital_rain.gif">
 <br></br>
 
-<b>Package version > 9.0.0 is experimental. This package no longer supports base64 encoding and instead packages the asset as a gif resource. This is to greatly decrease bundle size and loading time. You will need to make changes in your app bundler to use this. For next JS you can use webpack copy for gifs in node modules to your public/images folder or just copy/paste. To use base64 in the bundle, do not upgrade past 8.0.0.</b>
+<h2>Release History</h2>
+<ul>
+<li>
+   Version 10 package bundle includes the digital_rain.gif encoded as base64 again. This will automatically be bundled by the users application, no extra work required. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I highly recommend using code splitting techniques to not delay time to first load of your application. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>.
+ </li>
+ <li>
+   Version 9 to 9.4.0 included the digital_rain.gif file as an asset due to the huge size of base64 on the bundle. This required webpack copy on the users end to utilize and did not scale well.  For next JS you can copy/paste the gif into your public/images folder or use webpack copy plugin.
+ </li>
+ <li>
+ As of version 5.0.0, this package now supports Next.js with bundle for CJS. Please use version 4.2.0 and below if you need UMD.
+ </li>
 
-<b>As of version 5.0.0, this package now supports Next.js with bundles for both CJS and ESM module systems. Please use version 4.2.0 if you need UMD.</b>
+</ul>
 
 <h1>Intro</h1>
 
 This component renders beautiful neon digital rain on a black background.
 It fits its container.
-It can be enabled to go fullscreen when clicked on.
+It can be enabled to go fullscreen when clicked on. This is probably best used as a fullscreen screensaver.
 
 ```
 npm install react-digital-rain
@@ -44,13 +54,25 @@ animationSeconds?: number // the animation duration in seconds. If not provided,
 <h3>Examples</h3>
 
 ```
+//static import not recommended
+import DigitalRain from "react-digital-rain";
 
-import { DigitalRain } from "react-digital-rain";
+//code splitting recommended
+
+const DigitalRain = React.lazy(() => import("react-digital-rain"));
 
 const App = props => {
+  const [show, setShow] = useState(false);
 
-  return <DigitalRain />
+  useEffect(() => {
+    setShow(true)
+  }, [])
 
+  return show && (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DigitalRain />
+    </Suspense>
+  )
 }
 
 //for fullscreen capability with minimal animation
@@ -65,10 +87,11 @@ export default App;
 ```
 
 <h3>For more control of fullscreen</h3>
+Hide the navbar when fullscreen.
 
 ```
 
-import { DigitalRain, useFullScreen } from "react-digital-rain";
+import DigitalRain,{ useFullScreen } from "react-digital-rain";
 
 const App = props => {
 

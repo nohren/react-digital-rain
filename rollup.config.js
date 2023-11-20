@@ -29,14 +29,14 @@ export default {
       exclude: "node_modules/**",
     }),
     //image needs to be run first before anything else. What a bug.
-    // image({
-    //   extensions: /\.(png|jpg|jpeg|gif|svg)$/,
-    // }),
-    //for not bundling large gif to base64, instead add as asset
-    url({
-      publicPath: "/images/",
-      destDir: "dist/cjs/images",
+    image({
+      extensions: /\.(png|jpg|jpeg|gif|svg)$/,
     }),
+    //for not bundling large gif to base64, instead add as asset
+    // url({
+    //   publicPath: "/images/",
+    //   destDir: "dist/cjs/images",
+    // }),
     peerDepsExternal(),
     styles(),
     commonjs(),

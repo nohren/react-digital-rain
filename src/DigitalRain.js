@@ -164,7 +164,7 @@ const TileGenerator = (props) => {
   While in fullscreen, a click or pressing the escape button will trigger the callback subscribed.  We verify we are no longer in fullscreen, and then change css on the next render.
  
  */
-export function DigitalRain({ fullScreen = false, animationSeconds }) {
+export const DigitalRain = ({ fullScreen = false, animationSeconds }) => {
   //refs
   const outer = useRef(null);
   const readyRef = useRef(null);
@@ -302,4 +302,6 @@ export function DigitalRain({ fullScreen = false, animationSeconds }) {
       )}
     </div>
   );
-}
+};
+
+export default DigitalRain;
