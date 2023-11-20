@@ -31,15 +31,18 @@ npm install react-digital-rain
 
 <h1>Technical</h1>
 
-This component uses one gif to fit any screen with no loss to native resolution.
+This component uses one gif to fit any screen with no loss of resolution or stretching.
 
 **Problem:**
 
 ```
  background-image: url("digital_rain.gif")
+ background-size: cover;
+ background-repeat: no-repeat;
+ background-attachment: fixed;
 ```
 
-This results in a blurry image for most screens.
+This results in a blurry image as its stretched to fit most screens.
 
 **Solution:**
 
