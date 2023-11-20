@@ -8,7 +8,7 @@
 <h2>Release History</h2>
 <ul>
 <li>
-   Version 10 - this package again encodes digital_rain.gif as base64. Expect 8mb to be bundled. No extra work required by your bundler. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I recommend using code splitting so that your application's first load is not delayed.  i.e Avoid sending this with the main bundle. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>
+   Version 10 - this package again encodes digital_rain.gif as base64. Expect 8.6mb to be bundled with gzip encoding. No extra work required by your bundler. No webpack copy plugin.  I found this to be the easiest solution for the end user, it just works.  I recommend using code splitting so that your application's first load is not delayed.  i.e Avoid sending this with the main bundle. <a href="https://legacy.reactjs.org/docs/code-splitting.html">https://legacy.reactjs.org/docs/code-splitting.html</a>
  </li>
  <li>
    Version 9 to 9.4.0 - the digital_rain.gif is included as a file asset in the node modules folder, due to the huge size of base64 on the bundle. This requires webpack copy plugin on the users end to utilize.  For next JS you can copy/paste the gif into your public/images folder or use webpack copy plugin.
